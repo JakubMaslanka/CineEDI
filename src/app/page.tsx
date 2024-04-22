@@ -1,8 +1,11 @@
+import { asc } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { Movies } from "@/lib/db.schema";
 
+export const revalidate = 0;
+
 export default async function Home() {
-  const movies = await db.select().from(Movies);
+  const movies = await db.select().from(Movies).orderBy(asc(Movies.year));
 
   return (
     <main className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,7 +17,7 @@ export default async function Home() {
                 <img
                   src={movie.image_url ?? ""}
                   alt={`${movie.title} poster`}
-                  className="h-full w-full object-cover object-center"
+                  className="h-full w-full object-cover object-top"
                 />
               </div>
               <div className="relative mt-4">

@@ -10,9 +10,12 @@
     "deploy": "sst deploy --stage production",
     "db:generate": "drizzle-kit generate:pg --config=drizzle.config.ts",
     "db:studio": "drizzle-kit studio --config=drizzle.config.ts --port 3030",
-    "db:migration": "tsx ./src/cli/migrate.ts"
+    "db:migration": "tsx ./src/cli/migrate.ts",
+    "changeset:add": "changeset",
+    "changeset:version": "changeset version"
   },
   "dependencies": {
+    "@changesets/cli": "2.27.1",
     "@neondatabase/serverless": "0.9.1",
     "@t3-oss/env-core": "0.10.0",
     "drizzle-orm": "0.30.9",

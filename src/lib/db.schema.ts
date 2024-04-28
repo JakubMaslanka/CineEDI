@@ -1,102 +1,129 @@
 import {
   pgTable,
   serial,
-  varchar,
+  text,
   jsonb,
   timestamp,
   integer,
   pgEnum,
+  primaryKey,
 } from "drizzle-orm/pg-core";
 
 export const userRoleEnum = pgEnum("role", ["user", "admin"]);
 export const notificationStatusEnum = pgEnum("status", ["sent", "received"]);
 
-// Users Table
-export const Users = pgTable("users", {
-  id: serial("id").primaryKey().notNull(),
-  username: varchar("username", { length: 25 }).unique().notNull(),
-  email: varchar("email").unique().notNull(),
-  password_hash: varchar("password_hash").notNull(),
+export const users = pgTable("users", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  name: text("name"),
+  email: text("email").notNull().unique(),
+  emailVerified: timestamp("emailVerified", { mode: "date" }),
+  password: text("password").notNull(),
+  image: text("image"),
   role: userRoleEnum("role").default("user").notNull(),
-  interested_genres: jsonb("interested_genres"),
-  created_at: timestamp("created_at").defaultNow(),
 });
 
-// UserGenres Table (Junction Table for Many-to-Many relationship)
-export const UserGenres = pgTable("user_genres", {
-  user_id: integer("user_id").references(() => Users.id),
-  genre_id: integer("genre_id").references(() => MovieGenres.id),
+export const accounts = pgTable(
+  "accounts",
+  {
+    userId: text("userId")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    type: text("type").notNull(),
+    provider: text("provider").notNull(),
+    providerAccountId: text("providerAccountId").notNull(),
+    refresh_token: text("refresh_token"),
+    access_token: text("access_token"),
+    expires_at: integer("expires_at"),
+    token_type: text("token_type"),
+    scope: text("scope"),
+    id_token: text("id_token"),
+    session_state: text("session_state"),
+  },
+  (account) => ({
+    compoundKey: primaryKey({
+      columns: [account.provider, account.providerAccountId],
+    }),
+  })
+);
+
+export const userGenres = pgTable("user_genres", {
+  user_id: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  genre_id: integer("genre_id").references(() => movieGenres.id),
 });
 
 // Movies Table
-export const Movies = pgTable("movies", {
+export const movies = pgTable("movies", {
   id: serial("id").primaryKey().notNull(),
-  title: varchar("title").notNull(),
-  description: varchar("description"),
-  image_url: varchar("image_url"),
+  title: text("title").notNull(),
+  description: text("description"),
+  image_url: text("image_url"),
   year: integer("year"),
-  director: varchar("director"),
+  director: text("director"),
 });
 
 // Movie Genres Table
-export const MovieGenres = pgTable("movie_genres", {
+export const movieGenres = pgTable("movie_genres", {
   id: serial("id").primaryKey().notNull(),
   movie_id: integer("movie_id")
-    .references(() => Movies.id)
+    .references(() => movies.id)
     .notNull(),
-  genre: varchar("genre").notNull(),
+  genre: text("genre").notNull(),
 });
 
 // Movie Cast Table
-export const MovieCast = pgTable("movie_cast", {
+export const movieCast = pgTable("movie_cast", {
   movie_id: integer("movie_id")
-    .references(() => Movies.id)
+    .references(() => movies.id)
     .notNull(),
-  actor_name: varchar("actor_name").notNull(),
-  role: varchar("role").notNull(),
+  actor_name: text("actor_name").notNull(),
+  role: text("role").notNull(),
 });
 
 // Rentals Table
-export const Rentals = pgTable("rentals", {
+export const rentals = pgTable("rentals", {
   id: serial("id").primaryKey().notNull(),
-  user_id: integer("user_id")
-    .references(() => Users.id)
-    .notNull(),
+  user_id: text("user_id")
+    .notNull()
+    .references(() => users.id),
   movie_id: integer("movie_id")
-    .references(() => Movies.id)
+    .references(() => movies.id)
     .notNull(),
   rental_date: timestamp("rental_date").defaultNow(),
   return_date: timestamp("return_date").notNull(),
 });
 
 // Notifications Table
-export const Notifications = pgTable("notifications", {
+export const notifications = pgTable("notifications", {
   id: serial("id").primaryKey().notNull(),
-  user_id: integer("user_id")
-    .references(() => Users.id)
-    .notNull(),
-  message: varchar("message").notNull(),
+  user_id: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
+  message: text("message").notNull(),
   status: notificationStatusEnum("status").default("sent").notNull(),
   notification_date: timestamp("notification_date").defaultNow(),
 });
 
 // Favorites Table
-export const Favorites = pgTable("favorites", {
+export const favorites = pgTable("favorites", {
   id: serial("id").primaryKey().notNull(),
-  user_id: integer("user_id")
-    .references(() => Users.id)
-    .notNull(),
+  user_id: text("user_id")
+    .notNull()
+    .references(() => users.id, { onDelete: "cascade" }),
   movie_id: integer("movie_id")
-    .references(() => Movies.id)
+    .references(() => movies.id)
     .notNull(),
   added_on: timestamp("added_on").defaultNow(),
 });
 
 // EDI Transactions Table
-export const EDI_Transactions = pgTable("edi_transactions", {
+export const ediTransactions = pgTable("edi_transactions", {
   id: serial("id").primaryKey().notNull(),
-  type: varchar("type").notNull(),
+  type: text("type").notNull(),
   content: jsonb("content").notNull(),
-  content_xml: varchar("content_xml"),
+  content_xml: text("content_xml"),
   created_at: timestamp("created_at").defaultNow(),
 });

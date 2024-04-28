@@ -15,6 +15,20 @@
       "when": 1714302715113,
       "tag": "0001_nappy_giant_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1714318814904,
+      "tag": "0002_loud_thunderbolts",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1714328395694,
+      "tag": "0003_brief_wong",
+      "breakpoints": true
     }
   ]
 }

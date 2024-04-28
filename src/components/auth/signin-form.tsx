@@ -4,7 +4,10 @@ import { useState, useTransition } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signInAction } from "@/actions/authenticate";
+import {
+  emailVerificationResendAction,
+  signInAction,
+} from "@/actions/authenticate";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -19,11 +22,17 @@ import { AuthCard } from "@/components/auth/auth-card";
 import { FormError } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/auth/form-success";
 import { signInSchema } from "@/lib/zod";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+
+const DEFAULT_NOT_VERIFIED_EMAIL_MESSAGE = "Email nie został zweryfikowany!";
 
 export const SignInForm = () => {
   const [success, setSuccess] = useState<string | undefined>();
   const [error, setError] = useState<string | undefined>();
   const [isPending, startTransition] = useTransition();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: { email: "", password: "" },
@@ -34,7 +43,20 @@ export const SignInForm = () => {
     setError(undefined);
 
     startTransition(() =>
-      signInAction(data).then((result) => {
+      signInAction(data, callbackUrl).then((result) => {
+        setSuccess(result?.success);
+        setError(result?.error);
+      })
+    );
+  };
+
+  const handleVerificationEmailResend = () => {
+    setSuccess(undefined);
+    setError(undefined);
+    const currentEmail = form.getValues().email;
+
+    startTransition(() =>
+      emailVerificationResendAction(currentEmail).then((result) => {
         setSuccess(result?.success);
         setError(result?.error);
       })
@@ -85,11 +107,25 @@ export const SignInForm = () => {
                     />
                   </FormControl>
                   <FormMessage />
+                  <Button
+                    variant="link"
+                    size="sm"
+                    asChild
+                    className="!mt-0 !p-0 font-normal"
+                  >
+                    <Link href="/auth/reset-password">Zapomniałeś hasło?</Link>
+                  </Button>
                 </FormItem>
               )}
             />
           </div>
-          <FormError message={error} />
+          <FormError
+            message={error}
+            isNotVerifiedEmailMessage={
+              error === DEFAULT_NOT_VERIFIED_EMAIL_MESSAGE
+            }
+            onEmailResend={handleVerificationEmailResend}
+          />
           <FormSuccess message={success} />
           <Button
             type="submit"

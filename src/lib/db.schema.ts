@@ -57,6 +57,42 @@ export const accounts = pgTable(
   })
 );
 
+export const verificationTokens = pgTable(
+  "verification_tokens",
+  {
+    id: text("id")
+      .notNull()
+      .$defaultFn(() => crypto.randomUUID()),
+    email: text("email").notNull(),
+    token: text("token").notNull().unique(),
+    created_at: timestamp("created_at").defaultNow(),
+    expires_at: timestamp("expires_at").notNull(),
+  },
+  (verificationToken) => ({
+    compoundKey: primaryKey({
+      columns: [verificationToken.email, verificationToken.token],
+    }),
+  })
+);
+
+export const passwordResetTokens = pgTable(
+  "password_reset_tokens",
+  {
+    id: text("id")
+      .notNull()
+      .$defaultFn(() => crypto.randomUUID()),
+    email: text("email").notNull(),
+    token: text("token").notNull().unique(),
+    created_at: timestamp("created_at").defaultNow(),
+    expires_at: timestamp("expires_at").notNull(),
+  },
+  (passwordResetToken) => ({
+    compoundKey: primaryKey({
+      columns: [passwordResetToken.email, passwordResetToken.token],
+    }),
+  })
+);
+
 export const userGenres = pgTable("user_genres", {
   user_id: text("user_id")
     .notNull()

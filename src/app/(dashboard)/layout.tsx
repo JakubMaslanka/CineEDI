@@ -5,7 +5,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   const handleSignOut = async () => {
     "use server";
 
-    await signOut();
+    await signOut({ redirectTo: "/" });
   };
 
   return (

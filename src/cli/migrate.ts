@@ -3,6 +3,7 @@ import ws from "ws";
 import { Pool, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { migrate } from "drizzle-orm/postgres-js/migrator";
+import { type PostgresJsDatabase } from "drizzle-orm/postgres-js/driver";
 import * as schema from "../lib/db.schema";
 
 neonConfig.webSocketConstructor = ws;
@@ -20,8 +21,10 @@ async function performMigration() {
   try {
     await client.query("BEGIN");
 
-    const db = drizzle(client, { schema });
-    await migrate(db, { migrationsFolder: "src/migrations" });
+    const db = drizzle(client, { schema }) as unknown;
+    await migrate(db as PostgresJsDatabase<typeof schema>, {
+      migrationsFolder: "src/migrations",
+    });
 
     await client.query("COMMIT");
   } catch (err) {

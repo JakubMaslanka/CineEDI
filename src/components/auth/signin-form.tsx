@@ -1,13 +1,13 @@
 "use client";
 
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState, useTransition } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  emailVerificationResendAction,
-  signInAction,
-} from "@/actions/authenticate";
+import { sendEmailVerifyLinkAction, signInAction } from "@/actions/auth";
+import { signInSchema } from "@/lib/zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -21,9 +21,6 @@ import {
 import { AuthCard } from "@/components/auth/auth-card";
 import { FormError } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/auth/form-success";
-import { signInSchema } from "@/lib/zod";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 
 const DEFAULT_NOT_VERIFIED_EMAIL_MESSAGE = "Email nie został zweryfikowany!";
 
@@ -56,7 +53,7 @@ export const SignInForm = () => {
     const currentEmail = form.getValues().email;
 
     startTransition(() =>
-      emailVerificationResendAction(currentEmail).then((result) => {
+      sendEmailVerifyLinkAction(currentEmail).then((result) => {
         setSuccess(result?.success);
         setError(result?.error);
       })

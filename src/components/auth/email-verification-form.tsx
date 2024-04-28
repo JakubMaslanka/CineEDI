@@ -3,7 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { SymbolIcon } from "@radix-ui/react-icons";
-import { emailVerificationAction } from "@/actions/authenticate";
+import { emailVerifyAction } from "@/actions/auth";
 import { AuthCard } from "@/components/auth/auth-card";
 import { FormError } from "@/components/auth/form-error";
 import { FormSuccess } from "@/components/auth/form-success";
@@ -22,7 +22,7 @@ export const EmailVerificationForm = () => {
       return;
     }
 
-    emailVerificationAction(token)
+    emailVerifyAction(token)
       .then((result) => {
         setError(result.error);
         setSuccess(result.success);

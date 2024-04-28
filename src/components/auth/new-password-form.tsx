@@ -5,7 +5,7 @@ import { useState, useTransition } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { updatePasswordAction } from "@/actions/authenticate";
+import { resetPasswordAction } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -41,7 +41,7 @@ export const NewPasswordForm = () => {
     setError(undefined);
 
     startTransition(() =>
-      updatePasswordAction(data, token)
+      resetPasswordAction(data, token)
         .then((result) => {
           setSuccess(result?.success);
           setError(result?.error);

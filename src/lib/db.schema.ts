@@ -7,22 +7,31 @@ import {
   integer,
   pgEnum,
   primaryKey,
+  index,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const userRoleEnum = pgEnum("role", ["user", "admin"]);
 export const notificationStatusEnum = pgEnum("status", ["sent", "received"]);
 
-export const users = pgTable("users", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  name: text("name"),
-  email: text("email").notNull().unique(),
-  emailVerified: timestamp("emailVerified", { mode: "date" }),
-  password: text("password").notNull(),
-  image: text("image"),
-  role: userRoleEnum("role").default("user").notNull(),
-});
+export const users = pgTable(
+  "users",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    name: text("name"),
+    email: text("email").notNull().unique(),
+    emailVerified: timestamp("emailVerified", { mode: "date" }),
+    password: text("password").notNull(),
+    image: text("image"),
+    role: userRoleEnum("role").default("user").notNull(),
+  },
+  (table) => ({
+    idIdx: index("id_idx").on(table.id),
+    emailIdx: uniqueIndex("email_idx").on(table.email),
+  })
+);
 
 export const accounts = pgTable(
   "accounts",

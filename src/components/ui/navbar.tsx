@@ -53,6 +53,7 @@ export const Navbar = ({
                   <Image
                     width={87}
                     height={32}
+                    quality={100}
                     className="h-8 w-auto"
                     src="/logo.svg"
                     alt="cineEDI logo"

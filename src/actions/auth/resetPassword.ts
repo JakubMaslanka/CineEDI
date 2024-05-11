@@ -15,7 +15,7 @@ export const sendResetPasswordEmailAction = async (
   values: z.infer<typeof resetPasswordSchema>
 ) => {
   let limitExceeded = false;
-  await rateLimitByUserIP(2, 1000 * 60 * 5 /* 5 min */).catch(() => {
+  await rateLimitByUserIP(1, 1000 * 60 * 5 /* 5 min */).catch(() => {
     limitExceeded = true;
   });
 

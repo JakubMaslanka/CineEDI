@@ -11,7 +11,7 @@ import { getUserByEmail, getVerificationTokenByToken } from "@/utils/db";
 
 export const sendEmailVerifyLinkAction = async (email: string) => {
   let limitExceeded = false;
-  await rateLimitByUserIP(2, 1000 * 60 * 5 /* 5 min */).catch(() => {
+  await rateLimitByUserIP(1, 1000 * 60 * 5 /* 5 min */).catch(() => {
     limitExceeded = true;
   });
 

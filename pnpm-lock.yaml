@@ -47,6 +47,9 @@ dependencies:
   drizzle-orm:
     specifier: 0.30.10
     version: 0.30.10(@aws-sdk/client-rds-data@3.556.0)(@neondatabase/serverless@0.9.1)(@types/react@18.2.79)(kysely@0.25.0)(pg@8.11.5)(postgres@3.4.3)(react@18.2.0)
+  framer-motion:
+    specifier: 11.1.9
+    version: 11.1.9(react-dom@18.2.0)(react@18.2.0)
   next:
     specifier: 14.2.2
     version: 14.2.2(@babel/core@7.24.4)(react-dom@18.2.0)(react@18.2.0)
@@ -7660,6 +7663,25 @@ packages:
       tslib: 2.6.2
     optionalDependencies:
       '@emotion/is-prop-valid': 0.8.8
+    dev: false
+
+  /framer-motion@11.1.9(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-flECDIPV4QDNcOrDafVFiIazp8X01HFpzc01eDKJsdNH/wrATcYydJSH9JbPWMS8UD5lZlw+J1sK8LG2kICgqw==}
+    peerDependencies:
+      '@emotion/is-prop-valid': '*'
+      react: ^18.0.0
+      react-dom: ^18.0.0
+    peerDependenciesMeta:
+      '@emotion/is-prop-valid':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
+    dependencies:
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+      tslib: 2.6.2
     dev: false
 
   /fresh@0.5.2:

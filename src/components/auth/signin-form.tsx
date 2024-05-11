@@ -108,7 +108,7 @@ export const SignInForm = () => {
                     variant="link"
                     size="sm"
                     asChild
-                    className="!mt-0 !p-0 font-normal"
+                    className="!mt-0 !p-0 font-normal text-neutral-100"
                   >
                     <Link href="/auth/reset-password">Zapomniałeś hasło?</Link>
                   </Button>
@@ -128,7 +128,7 @@ export const SignInForm = () => {
             type="submit"
             disabled={isPending}
             size="lg"
-            className="w-full"
+            className="w-full bg-cineedi hover:bg-cineedi/50 transition-colors duration-250 ease-in-out"
           >
             Zaloguj się
           </Button>

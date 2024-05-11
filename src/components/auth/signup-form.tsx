@@ -114,7 +114,7 @@ export const SignUpForm = () => {
             type="submit"
             disabled={isPending}
             size="lg"
-            className="w-full"
+            className="w-full bg-cineedi hover:bg-cineedi/50 transition-colors duration-250 ease-in-out"
           >
             Zarejestruj się
           </Button>

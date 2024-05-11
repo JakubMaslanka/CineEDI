@@ -11,7 +11,7 @@ import {
   Cross1Icon,
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/cn";
 
 const DEFAULT_NAVBAR_LINKS = [
   { id: 1, name: "Home", path: "/home" },
@@ -54,6 +54,7 @@ export const Navbar = ({
                     width={87}
                     height={32}
                     quality={100}
+                    loading="eager"
                     className="h-8 w-auto"
                     src="/logo.svg"
                     alt="cineEDI logo"

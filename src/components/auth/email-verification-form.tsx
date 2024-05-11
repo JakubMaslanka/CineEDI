@@ -54,7 +54,7 @@ export const EmailVerificationForm = () => {
       <div>
         {!success && !error && (
           <div className="flex justify-center items-center">
-            <SymbolIcon className="h-10 w-10 animate-spin" />
+            <SymbolIcon className="h-10 w-10 animate-spin text-neutral-300" />
           </div>
         )}
         <FormSuccess message={success} />

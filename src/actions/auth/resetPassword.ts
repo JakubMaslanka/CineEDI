@@ -1,7 +1,10 @@
+"use server";
+
 import { eq } from "drizzle-orm";
 import { z } from "zod";
 import { hash } from "bcrypt-ts";
 import { db } from "@/lib/db";
+import { rateLimitByUserIP } from "@/lib/rateLimiter";
 import { sendResetPasswordEmail } from "@/lib/mail";
 import { passwordResetTokens, users } from "@/lib/db.schema";
 import { generateResetPasswordToken } from "@/lib/tokens";
@@ -11,6 +14,15 @@ import { getPasswordResetTokenByToken, getUserByEmail } from "@/utils/db";
 export const sendResetPasswordEmailAction = async (
   values: z.infer<typeof resetPasswordSchema>
 ) => {
+  let limitExceeded = false;
+  await rateLimitByUserIP(2, 1000 * 60 * 5 /* 5 min */).catch(() => {
+    limitExceeded = true;
+  });
+
+  if (limitExceeded) {
+    return { error: "Osiągnięto limit żądań! Spróbuj ponowanie później." };
+  }
+
   const validatedFields = resetPasswordSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -21,7 +33,10 @@ export const sendResetPasswordEmailAction = async (
   const user = await getUserByEmail(email);
 
   if (!user) {
-    return { error: "Podany email nie istnieje!" };
+    return {
+      error:
+        "Coś poszło nie tak. Upewnij się, że podany email jest prawidłowy.",
+    };
   }
 
   const passwordResetToken = await generateResetPasswordToken(user.email);
@@ -31,7 +46,7 @@ export const sendResetPasswordEmailAction = async (
   );
 
   return {
-    success: "Email został wysłany!",
+    success: "Email z linkiem do resetu hasła został wysłany!",
   };
 };
 
@@ -65,7 +80,10 @@ export const resetPasswordAction = async (
   const existingUser = await getUserByEmail(existingToken.email);
 
   if (!existingUser) {
-    return { error: "Email nie istnieje!" };
+    return {
+      error:
+        "Coś poszło nie tak. Upewnij się, że podany email jest prawidłowy.",
+    };
   }
 
   const hashedPassword = await hash(password, 10);

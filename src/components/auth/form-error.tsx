@@ -23,8 +23,7 @@ export const FormError = ({
           onClick={onEmailResend}
           variant="link"
           size="sm"
-          asChild
-          className="!mt-0 !p-0 font-normal"
+          className="!mt-0 !p-0 font-normal mx-auto w-full"
         >
           Wyślij ponowanie email weryfikacyjny
         </Button>

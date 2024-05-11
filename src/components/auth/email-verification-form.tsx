@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import { SymbolIcon } from "@radix-ui/react-icons";
 import { emailVerifyAction } from "@/actions/auth";
@@ -11,6 +11,7 @@ import { FormSuccess } from "@/components/auth/form-success";
 export const EmailVerificationForm = () => {
   const [error, setError] = useState<string>();
   const [success, setSuccess] = useState<string>();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
 
@@ -25,14 +26,20 @@ export const EmailVerificationForm = () => {
     emailVerifyAction(token)
       .then((result) => {
         setError(result.error);
-        setSuccess(result.success);
+
+        if (result.success) {
+          setSuccess(result.success);
+          setTimeout(() => {
+            router.push("/auth/sign-in");
+          }, 3000);
+        }
       })
       .catch(() => {
         setError(
           "Wystąpił niespodziewany błąd podczas weryfikacji adresu e-mail."
         );
       });
-  }, [error, success, token]);
+  }, [error, router, success, token]);
 
   useEffect(() => {
     handleTokenVerification();

@@ -1,16 +1,31 @@
+"use server";
+
 import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { users, verificationTokens } from "@/lib/db.schema";
+import { rateLimitByUserIP } from "@/lib/rateLimiter";
 import { sendVerificationEmail } from "@/lib/mail";
 import { generateVerificationToken } from "@/lib/tokens";
 import { getUserByEmail, getVerificationTokenByToken } from "@/utils/db";
 
 export const sendEmailVerifyLinkAction = async (email: string) => {
+  let limitExceeded = false;
+  await rateLimitByUserIP(2, 1000 * 60 * 5 /* 5 min */).catch(() => {
+    limitExceeded = true;
+  });
+
+  if (limitExceeded) {
+    return { error: "Osiągnięto limit żądań! Spróbuj ponowanie później." };
+  }
+
   const existingUser = await getUserByEmail(email);
 
   if (!existingUser) {
-    return { error: "Podany email nie istnieje!" };
+    return {
+      error:
+        "Coś poszło nie tak. Upewnij się, że podany email jest prawidłowy.",
+    };
   }
 
   const verificationToken = await generateVerificationToken(existingUser.email);
@@ -25,7 +40,10 @@ export const emailVerifyAction = async (token: string) => {
   const existingToken = await getVerificationTokenByToken(token);
 
   if (!existingToken) {
-    return { error: "Podany token nie istnieje!" };
+    return {
+      error:
+        "Coś poszło nie tak. Upewnij się, że podany email jest prawidłowy.",
+    };
   }
 
   const hasExpired = new Date(existingToken.expires_at) < new Date();
@@ -54,10 +72,6 @@ export const emailVerifyAction = async (token: string) => {
       existingToken.email
     }`
   );
-
-  setTimeout(() => {
-    redirect("/auth/sign-in");
-  }, 4000);
 
   return { success: "Email został zweryfikowany!" };
 };

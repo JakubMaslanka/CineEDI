@@ -1,6 +1,9 @@
 import { Resend } from "resend";
 import { env } from "@/env";
 
+import ResetPasswordEmail from "../../emails/auth/reset-password-email";
+import VerifyEmail from "../../emails/auth/verify-email";
+
 const resend = new Resend(env.RESEND_API_KEY);
 
 export const sendResetPasswordEmail = async (email: string, token: string) => {
@@ -10,7 +13,7 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
     to: email,
     from: "no-reply@cineedi.online",
     subject: "[CineEDI] Resetowanie hasła do platformy",
-    html: `<a href="${resetLink}">Reset your password</a>`,
+    react: <ResetPasswordEmail resetPasswordLink={resetLink} />,
   });
 
   console.info(
@@ -25,10 +28,10 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     to: email,
     from: "no-reply@cineedi.online",
     subject: "[CineEDI] Zweryfikuj swój adres email",
-    html: `<a href="${confirmLink}">Verify your email address</a>`,
+    react: <VerifyEmail confirmLink={confirmLink} />,
   });
 
   console.info(
-    `[${new Date().toDateString()}] The verification email has been sent to ${email}`
+    `[${new Date().toDateString()}] The verification email has been sent to: ${email}`
   );
 };

@@ -78,5 +78,11 @@ export const resetPasswordAction = async (
     .delete(passwordResetTokens)
     .where(eq(passwordResetTokens.id, existingToken.id));
 
+  console.info(
+    `[${new Date().toDateString()}] The password reset process has been successfully completed for the user with the email: ${
+      existingUser.email
+    }`
+  );
+
   return { success: "Hasło zostało zmienione!" };
 };

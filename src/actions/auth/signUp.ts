@@ -37,6 +37,7 @@ export const signUpAction = async (values: z.infer<typeof signUpSchema>) => {
   await sendVerificationEmail(verificationToken.email, verificationToken.token);
 
   return {
-    success: "Konto zostało utworzone! Sprawdź swoją skrzynkę mailową.",
+    success:
+      "Konto zostało utworzone! Sprawdź swoją skrzynkę mailową w celu zweryfikowania adresu email.",
   };
 };

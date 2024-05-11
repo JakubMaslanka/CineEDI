@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { users, verificationTokens } from "@/lib/db.schema";
@@ -53,6 +54,10 @@ export const emailVerifyAction = async (token: string) => {
       existingToken.email
     }`
   );
+
+  setTimeout(() => {
+    redirect("/auth/sign-in");
+  }, 4000);
 
   return { success: "Email został zweryfikowany!" };
 };

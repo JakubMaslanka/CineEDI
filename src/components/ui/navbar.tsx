@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
+import { useSession } from "next-auth/react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   BellIcon,
@@ -24,6 +25,7 @@ export const Navbar = ({
 }: {
   onSignOutAction: string | ((formData: FormData) => void) | undefined;
 }) => {
+  const session = useSession();
   const pathname = usePathname();
   const isActive = (path: string) => path === pathname;
 
@@ -122,17 +124,35 @@ export const Navbar = ({
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
                       <Menu.Item>
                         <Link
-                          href="/profile"
-                          className="block px-4 py-2 text-sm text-gray-700"
+                          href="/settings/profile"
+                          className="block px-4 py-2 text-sm w-full text-left text-gray-700 hover:text-gray-500 hover:translate-x-1 transition-all duration-200 ease-in-out"
                         >
                           Profil
+                        </Link>
+                      </Menu.Item>
+                      {session.data?.user.role === "admin" && (
+                        <Menu.Item>
+                          <Link
+                            href="/admin-panel"
+                            className="block px-4 py-2 text-sm w-full text-left text-gray-700 hover:text-gray-500 hover:translate-x-1 transition-all duration-200 ease-in-out"
+                          >
+                            Panel administratora
+                          </Link>
+                        </Menu.Item>
+                      )}
+                      <Menu.Item>
+                        <Link
+                          href="/settings/profile"
+                          className="block px-4 py-2 text-sm w-full text-left text-gray-700 hover:text-gray-500 hover:translate-x-1 transition-all duration-200 ease-in-out"
+                        >
+                          Historia transakcji
                         </Link>
                       </Menu.Item>
                       <Menu.Item>
                         <form action={onSignOutAction}>
                           <button
                             type="submit"
-                            className="block px-4 py-2 text-sm w-full text-left text-gray-700"
+                            className="block px-4 py-2 text-sm w-full text-left text-gray-700 hover:text-gray-500 hover:translate-x-1 transition-all duration-200 ease-in-out"
                           >
                             Wyloguj się
                           </button>

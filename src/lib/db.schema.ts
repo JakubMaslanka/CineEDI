@@ -1,7 +1,13 @@
 import {
+  InferInsertModel,
+  InferSelectModel,
+  relations,
+  sql,
+} from "drizzle-orm";
+import {
   pgTable,
   serial,
-  text,
+  varchar,
   jsonb,
   timestamp,
   integer,
@@ -9,6 +15,9 @@ import {
   primaryKey,
   index,
   uniqueIndex,
+  text,
+  boolean,
+  numeric,
 } from "drizzle-orm/pg-core";
 
 export const userRoleEnum = pgEnum("role", ["user", "admin"]);
@@ -17,15 +26,16 @@ export const notificationStatusEnum = pgEnum("status", ["sent", "received"]);
 export const users = pgTable(
   "users",
   {
-    id: text("id")
+    id: varchar("id")
       .primaryKey()
       .$defaultFn(() => crypto.randomUUID()),
-    name: text("name"),
-    email: text("email").notNull().unique(),
-    emailVerified: timestamp("emailVerified", { mode: "date" }),
-    password: text("password").notNull(),
-    image: text("image"),
+    name: varchar("name"),
+    email: varchar("email").notNull().unique(),
+    emailVerified: timestamp("email_verified", { mode: "date" }),
+    password: varchar("password").notNull(),
+    image: varchar("image"),
     role: userRoleEnum("role").default("user").notNull(),
+    firstTimeLoggedIn: boolean("first_time_logged_in").default(true),
   },
   (table) => ({
     idIdx: index("id_idx").on(table.id),
@@ -33,22 +43,25 @@ export const users = pgTable(
   })
 );
 
+export type User = InferSelectModel<typeof users>;
+export type UserInsert = InferInsertModel<typeof users>;
+
 export const accounts = pgTable(
   "accounts",
   {
-    userId: text("userId")
+    userId: varchar("userId")
       .notNull()
       .references(() => users.id, { onDelete: "cascade" }),
-    type: text("type").notNull(),
-    provider: text("provider").notNull(),
-    providerAccountId: text("providerAccountId").notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
+    type: varchar("type").notNull(),
+    provider: varchar("provider").notNull(),
+    providerAccountId: varchar("providerAccountId").notNull(),
+    refresh_token: varchar("refresh_token"),
+    access_token: varchar("access_token"),
     expires_at: integer("expires_at"),
-    token_type: text("token_type"),
-    scope: text("scope"),
-    id_token: text("id_token"),
-    session_state: text("session_state"),
+    token_type: varchar("token_type"),
+    scope: varchar("scope"),
+    id_token: varchar("id_token"),
+    session_state: varchar("session_state"),
   },
   (account) => ({
     compoundKey: primaryKey({
@@ -60,11 +73,11 @@ export const accounts = pgTable(
 export const verificationTokens = pgTable(
   "verification_tokens",
   {
-    id: text("id")
+    id: varchar("id")
       .notNull()
       .$defaultFn(() => crypto.randomUUID()),
-    email: text("email").notNull(),
-    token: text("token").notNull().unique(),
+    email: varchar("email").notNull(),
+    token: varchar("token").notNull().unique(),
     created_at: timestamp("created_at").defaultNow(),
     expires_at: timestamp("expires_at").notNull(),
   },
@@ -78,11 +91,11 @@ export const verificationTokens = pgTable(
 export const passwordResetTokens = pgTable(
   "password_reset_tokens",
   {
-    id: text("id")
+    id: varchar("id")
       .notNull()
       .$defaultFn(() => crypto.randomUUID()),
-    email: text("email").notNull(),
-    token: text("token").notNull().unique(),
+    email: varchar("email").notNull(),
+    token: varchar("token").notNull().unique(),
     created_at: timestamp("created_at").defaultNow(),
     expires_at: timestamp("expires_at").notNull(),
   },
@@ -93,45 +106,138 @@ export const passwordResetTokens = pgTable(
   })
 );
 
-export const userGenres = pgTable("user_genres", {
-  user_id: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  genre_id: integer("genre_id").references(() => movieGenres.id),
-});
-
 // Movies Table
 export const movies = pgTable("movies", {
   id: serial("id").primaryKey().notNull(),
-  title: text("title").notNull(),
-  description: text("description"),
-  image_url: text("image_url"),
+  title: varchar("title").notNull(),
+  description: varchar("description"),
+  storyline: varchar("storyline"),
+  image_url: varchar("image_url"),
   year: integer("year"),
-  director: text("director"),
+  imdb_rating: numeric("imdb_rating"),
+  director: varchar("director"),
+  tags: text("tags")
+    .array()
+    .default(sql`ARRAY[]::text[]`),
 });
+
+export type Movie = InferSelectModel<typeof movies>;
+export type MovieInsert = InferInsertModel<typeof movies>;
+
+export const usersRelations = relations(users, ({ many }) => ({
+  usersToGenres: many(usersToGenres),
+}));
 
 // Movie Genres Table
 export const movieGenres = pgTable("movie_genres", {
-  id: serial("id").primaryKey().notNull(),
-  movie_id: integer("movie_id")
-    .references(() => movies.id)
-    .notNull(),
-  genre: text("genre").notNull(),
+  id: serial("id").primaryKey(),
+  genre: varchar("genre", { length: 64 }).notNull(),
 });
 
+export type MovieGenres = InferSelectModel<typeof movieGenres>;
+export type MovieGenresInsert = InferInsertModel<typeof movieGenres>;
+
+export const movieGenresRelations = relations(movieGenres, ({ many }) => ({
+  usersToGenres: many(usersToGenres),
+  moviesToGenres: many(moviesToGenres),
+}));
+
+export const usersToGenres = pgTable(
+  "users_to_genres",
+  {
+    userId: varchar("user_id")
+      .notNull()
+      .references(() => users.id),
+    movieGenresId: integer("movie_genres_id")
+      .notNull()
+      .references(() => movieGenres.id),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.userId, t.movieGenresId] }),
+  })
+);
+
+export const usersToGenresRelations = relations(usersToGenres, ({ one }) => ({
+  movieGenre: one(movieGenres, {
+    fields: [usersToGenres.movieGenresId],
+    references: [movieGenres.id],
+  }),
+  user: one(users, {
+    fields: [usersToGenres.userId],
+    references: [users.id],
+  }),
+}));
+
+export const moviesToGenres = pgTable(
+  "movies_to_genres",
+  {
+    movieId: integer("movie_id")
+      .notNull()
+      .references(() => movies.id),
+    movieGenresId: integer("movie_genres_id")
+      .notNull()
+      .references(() => movieGenres.id),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.movieId, t.movieGenresId] }),
+  })
+);
+
+export const moviesToGenresRelations = relations(moviesToGenres, ({ one }) => ({
+  movieGenre: one(movieGenres, {
+    fields: [moviesToGenres.movieGenresId],
+    references: [movieGenres.id],
+  }),
+  movie: one(movies, {
+    fields: [moviesToGenres.movieId],
+    references: [movies.id],
+  }),
+}));
+
 // Movie Cast Table
-export const movieCast = pgTable("movie_cast", {
-  movie_id: integer("movie_id")
-    .references(() => movies.id)
-    .notNull(),
-  actor_name: text("actor_name").notNull(),
-  role: text("role").notNull(),
+export const cast = pgTable("cast", {
+  id: serial("id").primaryKey(),
+  actor_name: varchar("actor_name").notNull(),
+  role: varchar("role").notNull(),
 });
+
+export type Cast = InferSelectModel<typeof cast>;
+export type CastInsert = InferInsertModel<typeof cast>;
+
+export const castRelations = relations(cast, ({ many }) => ({
+  castToMovies: many(castToMovies),
+}));
+
+export const castToMovies = pgTable(
+  "cast_to_movies",
+  {
+    castId: integer("cast_id")
+      .notNull()
+      .references(() => cast.id),
+    movieId: integer("movie_id")
+      .notNull()
+      .references(() => movies.id),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.castId, t.movieId] }),
+  })
+);
+
+export const castToMoviesRelations = relations(castToMovies, ({ one }) => ({
+  cast: one(cast, {
+    fields: [castToMovies.castId],
+    references: [cast.id],
+  }),
+  movie: one(movies, {
+    fields: [castToMovies.movieId],
+    references: [movies.id],
+  }),
+}));
 
 // Rentals Table
 export const rentals = pgTable("rentals", {
   id: serial("id").primaryKey().notNull(),
-  user_id: text("user_id")
+  user_id: varchar("user_id")
     .notNull()
     .references(() => users.id),
   movie_id: integer("movie_id")
@@ -141,21 +247,27 @@ export const rentals = pgTable("rentals", {
   return_date: timestamp("return_date").notNull(),
 });
 
+export type Rentals = InferSelectModel<typeof rentals>;
+export type RentalsInsert = InferInsertModel<typeof rentals>;
+
 // Notifications Table
 export const notifications = pgTable("notifications", {
   id: serial("id").primaryKey().notNull(),
-  user_id: text("user_id")
+  user_id: varchar("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
-  message: text("message").notNull(),
+  message: varchar("message").notNull(),
   status: notificationStatusEnum("status").default("sent").notNull(),
   notification_date: timestamp("notification_date").defaultNow(),
 });
 
+export type Notifications = InferSelectModel<typeof notifications>;
+export type NotificationsInsert = InferInsertModel<typeof notifications>;
+
 // Favorites Table
 export const favorites = pgTable("favorites", {
   id: serial("id").primaryKey().notNull(),
-  user_id: text("user_id")
+  user_id: varchar("user_id")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   movie_id: integer("movie_id")
@@ -164,11 +276,17 @@ export const favorites = pgTable("favorites", {
   added_on: timestamp("added_on").defaultNow(),
 });
 
+export type Favorites = InferSelectModel<typeof favorites>;
+export type FavoritesInsert = InferInsertModel<typeof favorites>;
+
 // EDI Transactions Table
 export const ediTransactions = pgTable("edi_transactions", {
   id: serial("id").primaryKey().notNull(),
-  type: text("type").notNull(),
+  type: varchar("type").notNull(),
   content: jsonb("content").notNull(),
-  content_xml: text("content_xml"),
+  content_xml: varchar("content_xml"),
   created_at: timestamp("created_at").defaultNow(),
 });
+
+export type EdiTransactions = InferSelectModel<typeof ediTransactions>;
+export type EdiTransactionsInsert = InferInsertModel<typeof ediTransactions>;

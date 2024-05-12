@@ -51,10 +51,13 @@ export const AuthCard = ({
       {children}
     </CardContent>
     <CardFooter>
-      <Button variant="link" className="w-full" size="sm" asChild>
-        <Link className="font-light text-neutral-100" href={footerHref}>
-          {footerText}
-        </Link>
+      <Button
+        variant="link"
+        className="w-full text-neutral-100 font-light"
+        size="sm"
+        asChild
+      >
+        <Link href={footerHref}>{footerText}</Link>
       </Button>
     </CardFooter>
   </Card>

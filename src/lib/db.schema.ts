@@ -147,10 +147,10 @@ export const usersToGenres = pgTable(
   {
     userId: varchar("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => users.id, { onDelete: "cascade" }),
     movieGenresId: integer("movie_genres_id")
       .notNull()
-      .references(() => movieGenres.id),
+      .references(() => movieGenres.id, { onDelete: "cascade" }),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.userId, t.movieGenresId] }),
@@ -173,10 +173,10 @@ export const moviesToGenres = pgTable(
   {
     movieId: integer("movie_id")
       .notNull()
-      .references(() => movies.id),
+      .references(() => movies.id, { onDelete: "cascade" }),
     movieGenresId: integer("movie_genres_id")
       .notNull()
-      .references(() => movieGenres.id),
+      .references(() => movieGenres.id, { onDelete: "cascade" }),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.movieId, t.movieGenresId] }),

@@ -2,8 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Fragment } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
@@ -11,8 +11,19 @@ import {
   HamburgerMenuIcon,
   Cross1Icon,
   MagnifyingGlassIcon,
+  RocketIcon,
+  FaceIcon,
+  CalendarIcon,
 } from "@radix-ui/react-icons";
 import { cn } from "@/utils/cn";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "./command";
 
 const DEFAULT_NAVBAR_LINKS = [
   { id: 1, name: "Home", path: "/home" },
@@ -25,9 +36,41 @@ export const Navbar = ({
 }: {
   onSignOutAction: string | ((formData: FormData) => void) | undefined;
 }) => {
+  const [searchCommandOpen, setSearchCommandOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
   const session = useSession();
+  const router = useRouter();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const isActive = (path: string) => path === pathname;
+
+  const handleSearchCommandClose = useCallback(() => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("search_query");
+    if (searchInput !== "") {
+      params.set("search_query", searchInput);
+    }
+
+    router.push("/home" + `?${params.toString()}`, {
+      scroll: false,
+    });
+
+    setSearchInput("");
+    setSearchCommandOpen(false);
+  }, [router, searchInput, searchParams]);
+
+  useEffect(() => {
+    if (!searchCommandOpen) return;
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSearchCommandClose();
+      }
+    };
+
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, [handleSearchCommandClose, searchCommandOpen]);
 
   return (
     <Disclosure as="nav" className="bg-zinc-900 shadow">
@@ -82,6 +125,7 @@ export const Navbar = ({
               <div className="absolute inset-y-0 right-0 flex gap-x-2 items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                 <button
                   type="button"
+                  onClick={() => setSearchCommandOpen(true)}
                   className="relative rounded-full bg-zinc-950 p-1 text-gray-200 hover:text-cineedi/80 focus:outline-none focus:ring-2 focus:ring-cineedi focus:ring-offset-2"
                 >
                   <span className="absolute -inset-1.5" />
@@ -164,6 +208,19 @@ export const Navbar = ({
               </div>
             </div>
           </div>
+
+          <CommandDialog
+            open={searchCommandOpen}
+            onOpenChange={handleSearchCommandClose}
+          >
+            <CommandInput
+              className="border-none focus:outline-none focus:ring-transparent focus:border-transparent"
+              placeholder="Chłopaki nie płaczą..."
+              value={searchInput}
+              onValueChange={setSearchInput}
+            />
+            <CommandList className="hidden" />
+          </CommandDialog>
 
           <Disclosure.Panel className="sm:hidden">
             <div className="space-y-1 pb-4 pt-2">

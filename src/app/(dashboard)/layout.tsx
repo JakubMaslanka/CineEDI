@@ -1,6 +1,7 @@
 import { SessionProvider } from "next-auth/react";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/ui/navbar";
+import { Footer } from "@/components/ui/footer";
 import { signOut } from "@/lib/auth";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
@@ -17,6 +18,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         {children}
       </div>
       <Toaster richColors />
+      <Footer />
     </SessionProvider>
   );
 };

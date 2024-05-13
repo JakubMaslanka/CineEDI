@@ -79,7 +79,11 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), addVariablesForColors],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("@tailwindcss/forms"),
+    addVariablesForColors,
+  ],
 } satisfies Config;
 
 function addVariablesForColors({ addBase, theme }: any) {

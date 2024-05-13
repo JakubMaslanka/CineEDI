@@ -12,7 +12,7 @@ const HomePage = async ({
   searchParams: { sortBy?: string };
 }) => {
   let movies: Movie[] = [];
-  console.log(searchParams);
+
   const genres = await db.query.movieGenres.findMany();
   const directors = await db.query.movies.findMany({
     columns: { director: true },

@@ -16,14 +16,7 @@ import {
   CalendarIcon,
 } from "@radix-ui/react-icons";
 import { cn } from "@/utils/cn";
-import {
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "./command";
+import { CommandDialog, CommandInput, CommandList } from "./command";
 
 const DEFAULT_NAVBAR_LINKS = [
   { id: 1, name: "Home", path: "/home" },
@@ -215,7 +208,7 @@ export const Navbar = ({
           >
             <CommandInput
               className="border-none focus:outline-none focus:ring-transparent focus:border-transparent"
-              placeholder="Chłopaki nie płaczą..."
+              placeholder="Wyszukaj swój ulubiony film..."
               value={searchInput}
               onValueChange={setSearchInput}
             />

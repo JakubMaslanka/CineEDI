@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Poppins } from "next/font/google";
 import { cn } from "@/utils/cn";
 import { StarFilledIcon } from "@radix-ui/react-icons";
@@ -22,7 +23,7 @@ export const MoviesGrid = ({ movies }: { movies: Movie[] }) =>
   );
 
 const MovieCard = ({ movie }: { movie: Movie }) => (
-  <div className="relative">
+  <Link className="relative" href={`/movie/${movie.id}`}>
     <div className="relative h-72 w-full overflow-hidden rounded-lg cursor-pointer">
       <img
         src={movie.image_url ?? ""}
@@ -54,5 +55,5 @@ const MovieCard = ({ movie }: { movie: Movie }) => (
       />
       <p className="relative text-lg font-semibold text-white">{movie.title}</p>
     </div>
-  </div>
+  </Link>
 );

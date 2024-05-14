@@ -210,13 +210,20 @@ export const MoviesWithFilterLayout = ({
                                     onChange={(e) => {
                                       updateQueryString(
                                         `${section.id}Filtering`,
-                                        e.target.value
+                                        e.target.value,
+                                        section.id === "rating" ? false : true
                                       );
                                     }}
-                                    defaultChecked={searchParams
-                                      .get(`${section.id}Filtering`)
-                                      ?.split(",")
-                                      .includes(option.value)}
+                                    defaultChecked={
+                                      section.id === "rating"
+                                        ? searchParams.get(
+                                            `${section.id}Filtering`
+                                          ) === option.value
+                                        : searchParams
+                                            .get(`${section.id}Filtering`)
+                                            ?.split(",")
+                                            .includes(option.value)
+                                    }
                                     className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                   />
                                   <label
@@ -352,13 +359,20 @@ export const MoviesWithFilterLayout = ({
                                 onChange={(e) => {
                                   updateQueryString(
                                     `${section.id}Filtering`,
-                                    e.target.value
+                                    e.target.value,
+                                    section.id === "rating" ? false : true
                                   );
                                 }}
-                                defaultChecked={searchParams
-                                  .get(`${section.id}Filtering`)
-                                  ?.split(",")
-                                  .includes(option.value)}
+                                defaultChecked={
+                                  section.id === "rating"
+                                    ? searchParams.get(
+                                        `${section.id}Filtering`
+                                      ) === option.value
+                                    : searchParams
+                                        .get(`${section.id}Filtering`)
+                                        ?.split(",")
+                                        .includes(option.value)
+                                }
                                 className="h-4 w-4 rounded border-cineedi text-cineedi focus:ring-cineedi/25 ring-0"
                               />
                               <label

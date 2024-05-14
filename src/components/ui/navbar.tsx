@@ -11,9 +11,6 @@ import {
   HamburgerMenuIcon,
   Cross1Icon,
   MagnifyingGlassIcon,
-  RocketIcon,
-  FaceIcon,
-  CalendarIcon,
 } from "@radix-ui/react-icons";
 import { cn } from "@/utils/cn";
 import { CommandDialog, CommandInput, CommandList } from "./command";
@@ -40,6 +37,7 @@ export const Navbar = ({
   const handleSearchCommandClose = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("search_query");
+
     if (searchInput !== "") {
       params.set("search_query", searchInput);
     }

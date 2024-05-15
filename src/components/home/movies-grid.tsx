@@ -9,9 +9,20 @@ const poppins = Poppins({
   weight: ["400"],
 });
 
-export const MoviesGrid = ({ movies }: { movies: Movie[] }) =>
+export const MoviesGrid = ({
+  movies,
+  className,
+}: {
+  movies: Movie[];
+  className?: string;
+}) =>
   movies.length > 0 ? (
-    <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:gap-x-8">
+    <div
+      className={cn(
+        "mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-3 xl:gap-x-8",
+        className
+      )}
+    >
       {movies.map((movie) => (
         <MovieCard key={movie.id} movie={movie} />
       ))}

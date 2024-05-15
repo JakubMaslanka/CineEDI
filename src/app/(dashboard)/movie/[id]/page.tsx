@@ -1,17 +1,38 @@
+import { notFound, redirect } from "next/navigation";
 import { db } from "@/lib/db";
-import { notFound } from "next/navigation";
+import { auth } from "@/lib/auth";
+import { MovieLayout } from "@/components/movie/movie-layout";
 
 const MoviePage = async ({ params: { id } }: { params: { id: string } }) => {
-  const movie = await db.query.moviesToGenres.findFirst({
+  const session = await auth();
+
+  if (!session) redirect("/auth/sign-in");
+
+  const movie = await db.query.moviesToGenres.findMany({
     with: { movieGenre: true, movie: true },
     where: (schema, { eq }) => eq(schema.movieId, +id),
   });
 
-  if (!movie) {
-    notFound();
-  }
+  if (!movie) notFound();
 
-  return <h1>{JSON.stringify(movie)}</h1>;
+  const isFavourite = await db.query.favorites.findFirst({
+    where: (schema, { and, eq }) =>
+      and(eq(schema.movie_id, +id), eq(schema.user_id, session.user.id)),
+  });
+
+  const isRented = await db.query.rentals.findFirst({
+    where: (schema, { and, eq }) =>
+      and(eq(schema.movie_id, +id), eq(schema.user_id, session.user.id)),
+  });
+
+  return (
+    <MovieLayout
+      movie={movie[0].movie}
+      genres={movie.map(({ movieGenre }) => movieGenre.genre)}
+      isFavourite={!!isFavourite}
+      isRented={!!isRented}
+    />
+  );
 };
 
 export default MoviePage;

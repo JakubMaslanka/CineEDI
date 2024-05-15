@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db";
 import { users, verificationTokens } from "@/lib/db.schema";

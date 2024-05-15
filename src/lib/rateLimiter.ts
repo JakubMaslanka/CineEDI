@@ -22,7 +22,7 @@ export const rateLimitByUserIP = async (
   window: number = 10000
 ) => {
   const ip = getIP();
-  console.log(ip);
+
   if (!ip) {
     throw new Error("IP address not found");
   }
@@ -40,9 +40,7 @@ export const rateLimitByUserIP = async (
 
   currentRequest.count++;
 
-  console.log({ ipToRequestMap, currentRequest });
   if (currentRequest.count > limit) {
-    console.log("osiageity limit");
     throw new Error("Rate limit exceeded");
   }
 };

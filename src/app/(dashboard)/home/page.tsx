@@ -1,5 +1,8 @@
 import { unstable_noStore as noStore } from "next/cache";
+import dynamic from "next/dynamic";
+import { redirect } from "next/navigation";
 import { asc, desc } from "drizzle-orm";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Movie, movies as moviesSchema } from "@/lib/db.schema";
 import { MoviesWithFilterLayout } from "@/components/home/movies-with-filter-layout";
@@ -13,6 +16,10 @@ interface SearchParams {
   directorsFiltering?: string;
   ratingFiltering?: string;
 }
+
+const WelcomeModal = dynamic(() => import("@/components/home/welcome-modal"), {
+  ssr: false,
+});
 
 async function fetchMoviesBySearchParams(
   searchParams: SearchParams
@@ -77,18 +84,34 @@ async function fetchMoviesBySearchParams(
 }
 
 const HomePage = async ({ searchParams }: { searchParams: SearchParams }) => {
+  const session = await auth();
+
+  if (!session) redirect("/auth/sign-in");
+
   const genres = await db.query.movieGenres.findMany();
   const directors = await db.query.movies.findMany({
     columns: { director: true },
   });
   const movies = await fetchMoviesBySearchParams(searchParams);
+  const user = await db.query.users.findFirst({
+    where: (schema, { eq }) => eq(schema.id, session.user.id),
+    columns: {
+      firstTimeLoggedIn: true,
+    },
+  });
 
   return (
-    <MoviesWithFilterLayout
-      movies={movies}
-      genres={genres}
-      directors={directors}
-    />
+    <>
+      <WelcomeModal
+        firstTimeLoggedIn={user?.firstTimeLoggedIn ?? false}
+        genres={genres}
+      />
+      <MoviesWithFilterLayout
+        movies={movies}
+        genres={genres}
+        directors={directors}
+      />
+    </>
   );
 };
 

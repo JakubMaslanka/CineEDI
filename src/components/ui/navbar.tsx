@@ -40,11 +40,10 @@ export const Navbar = ({
 
     if (searchInput !== "") {
       params.set("search_query", searchInput);
+      router.push("/home" + `?${params.toString()}`, {
+        scroll: false,
+      });
     }
-
-    router.push("/home" + `?${params.toString()}`, {
-      scroll: false,
-    });
 
     setSearchInput("");
     setSearchCommandOpen(false);

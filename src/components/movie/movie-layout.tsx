@@ -185,7 +185,7 @@ export const MovieLayout = ({
           <div className="mt-10">
             <button
               onClick={isRented ? handleMoviePlay : handleRent}
-              className="flex w-full items-center justify-center rounded-md border border-transparent bg-cineedi px-8 py-3 text-base font-medium text-white hover:bg-cineedi/75 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cineedi focus:ring-offset-2 focus:ring-offset-gray-50"
+              className="flex w-full items-center justify-center rounded-md border border-transparent bg-cineedi px-8 py-3 text-base font-medium text-white hover:bg-cineedi/75 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cineedi focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-cineedi disabled:opacity-25"
             >
               {isRented ? (
                 <>
@@ -215,7 +215,7 @@ export const MovieLayout = ({
                 isAddToFavouriteActionPending ||
                 isRemoveFromFavouriteActionPending
               }
-              className="flex w-full items-center border border-neutral-400 justify-center rounded-md bg-transparent px-8 py-3 text-base font-medium text-neutral-400 hover:text-neutral-200 hover:border-neutral-200 transition-colors duration-200 focus:outline-none focus:ring-0 focus:ring-transparent"
+              className="flex w-full items-center border border-neutral-400 justify-center rounded-md bg-transparent px-8 py-3 text-base font-medium text-neutral-400 hover:text-neutral-200 hover:border-neutral-200 transition-colors duration-200 focus:outline-none focus:ring-0 focus:ring-transparent disabled:opacity-25"
             >
               {isFavourite ? (
                 <>

@@ -34,7 +34,7 @@ export const addToFavouriteAction = async (movieId: number) => {
     const removeIfAlreadyExist = await removeFromFavouriteAction(movieId);
 
     if (removeIfAlreadyExist.error) {
-      return removeIfAlreadyExist;
+      return { error: removeIfAlreadyExist.error };
     }
 
     await db.insert(favoritesSchema).values({

@@ -21,6 +21,7 @@ import {
 } from "drizzle-orm/pg-core";
 
 export const userRoleEnum = pgEnum("role", ["user", "admin"]);
+export const rentalStatusEnum = pgEnum("rental_status", ["rented", "ended"]);
 export const notificationStatusEnum = pgEnum("status", ["sent", "received"]);
 
 export const users = pgTable(
@@ -243,8 +244,12 @@ export const rentals = pgTable("rentals", {
   movie_id: integer("movie_id")
     .references(() => movies.id)
     .notNull(),
+  edi_transaction_id: integer("edi_transaction_id")
+    .references(() => ediTransactions.id)
+    .notNull(),
+  status: rentalStatusEnum("rental_status").default("rented").notNull(),
   rental_date: timestamp("rental_date").defaultNow(),
-  return_date: timestamp("return_date").notNull(),
+  rental_end_date: timestamp("rental_end_date").notNull(),
 });
 
 export type Rentals = InferSelectModel<typeof rentals>;
@@ -282,7 +287,6 @@ export type FavoritesInsert = InferInsertModel<typeof favorites>;
 // EDI Transactions Table
 export const ediTransactions = pgTable("edi_transactions", {
   id: serial("id").primaryKey().notNull(),
-  type: varchar("type").notNull(),
   content: jsonb("content").notNull(),
   content_xml: varchar("content_xml"),
   created_at: timestamp("created_at").defaultNow(),

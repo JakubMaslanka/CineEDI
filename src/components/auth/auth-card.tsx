@@ -29,7 +29,11 @@ export const AuthCard = ({
 }) => (
   <Card className="w-[400px] shadow-md z-50 bg-neutral-900 border-neutral-800">
     <CardHeader className="gap-6">
-      <img className="h-10 w-auto" src="/logo.svg" alt="cineEDI logo" />
+      <img
+        className="mx-auto w-[114px] h-[42px]"
+        src="/logo.svg"
+        alt="cineEDI logo"
+      />
       <p
         className={cn(
           "text-neutral-300 max-w-lg mx-auto my-4 text-md text-center relative z-10",

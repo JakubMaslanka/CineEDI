@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { LoaderCircleIcon } from "lucide-react";
 import {
   Cross1Icon,
@@ -29,6 +30,7 @@ export const MovieLayout = ({
   isRented: boolean;
   isFavourite: boolean;
 }) => {
+  const router = useRouter();
   const [isAddToFavouriteActionPending, startAddToFavouriteTransition] =
     useTransition();
   const [
@@ -37,7 +39,7 @@ export const MovieLayout = ({
   ] = useTransition();
 
   const handleMoviePlay = () => {
-    console.log(movie.id);
+    router.push(`/player/${movie.id}`);
   };
 
   const handleAddToFavourite = () => {

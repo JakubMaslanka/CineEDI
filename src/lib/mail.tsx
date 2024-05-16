@@ -35,3 +35,27 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     `[${new Date().toDateString()}] The verification email has been sent to: ${email}`
   );
 };
+
+interface RentDetails {
+  id: number;
+  movieTitle: string;
+}
+
+export const sendMovieRentStartEmail = async (
+  email: string,
+  rent: RentDetails
+) => {
+  const rentStatusLink = `${env.AUTH_URL}/rent-status/${rent.id}`;
+
+  await resend.emails.send({
+    to: email,
+    from: "no-reply@cineedi.online",
+    subject: `[CineEDI] Właśnie wypożyczyłeś film "${rent.movieTitle}"`,
+    // TODO: Add email template for this operation
+    html: `Zobacz szczególy tej operacji na: ${rentStatusLink}`,
+  });
+
+  console.info(
+    `[${new Date().toDateString()}] The email for the movie rent process has been sent to: ${email}`
+  );
+};

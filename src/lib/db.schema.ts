@@ -255,6 +255,21 @@ export const rentals = pgTable("rentals", {
 export type Rentals = InferSelectModel<typeof rentals>;
 export type RentalsInsert = InferInsertModel<typeof rentals>;
 
+export const rentalsRelations = relations(rentals, ({ one }) => ({
+  user_id: one(users, {
+    fields: [rentals.user_id],
+    references: [users.id],
+  }),
+  movie_id: one(movies, {
+    fields: [rentals.movie_id],
+    references: [movies.id],
+  }),
+  edi_transaction_id: one(ediTransactions, {
+    fields: [rentals.edi_transaction_id],
+    references: [ediTransactions.id],
+  }),
+}));
+
 // Notifications Table
 export const notifications = pgTable("notifications", {
   id: serial("id").primaryKey().notNull(),

@@ -17,6 +17,7 @@ import { Movie, MovieGenres } from "@/lib/db.schema";
 import {
   addToFavouriteAction,
   removeFromFavouriteAction,
+  rentMovieAction,
 } from "@/actions/movie";
 
 export const MovieLayout = ({
@@ -31,6 +32,7 @@ export const MovieLayout = ({
   isFavourite: boolean;
 }) => {
   const router = useRouter();
+  const [isRentMovieActionPending, startRentMovieTransition] = useTransition();
   const [isAddToFavouriteActionPending, startAddToFavouriteTransition] =
     useTransition();
   const [
@@ -69,7 +71,17 @@ export const MovieLayout = ({
   };
 
   const handleRent = () => {
-    console.log(movie.id);
+    startRentMovieTransition(() =>
+      rentMovieAction(movie.id).then((result) => {
+        if (result.error) {
+          toast.error(result.error);
+        }
+        if (result.success) {
+          toast.success(result.success.message);
+          router.push(`/rent-status/${result.success.rentId}`);
+        }
+      })
+    );
   };
 
   const breadcrumbs = [
@@ -186,6 +198,7 @@ export const MovieLayout = ({
 
           <div className="mt-10">
             <button
+              disabled={isRentMovieActionPending}
               onClick={isRented ? handleMoviePlay : handleRent}
               className="flex w-full items-center justify-center rounded-md border border-transparent bg-cineedi px-8 py-3 text-base font-medium text-white hover:bg-cineedi/75 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-cineedi focus:ring-offset-2 focus:ring-offset-gray-50 disabled:bg-cineedi disabled:opacity-25"
             >

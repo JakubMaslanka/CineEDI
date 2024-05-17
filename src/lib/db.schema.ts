@@ -117,6 +117,7 @@ export const movies = pgTable("movies", {
   year: integer("year"),
   imdb_rating: numeric("imdb_rating"),
   director: varchar("director"),
+  create_at: timestamp("create_at").defaultNow(),
   tags: text("tags")
     .array()
     .default(sql`ARRAY[]::text[]`),
@@ -214,10 +215,10 @@ export const castToMovies = pgTable(
   {
     castId: integer("cast_id")
       .notNull()
-      .references(() => cast.id),
+      .references(() => cast.id, { onDelete: "cascade" }),
     movieId: integer("movie_id")
       .notNull()
-      .references(() => movies.id),
+      .references(() => movies.id, { onDelete: "cascade" }),
   },
   (t) => ({
     pk: primaryKey({ columns: [t.castId, t.movieId] }),
@@ -240,12 +241,12 @@ export const rentals = pgTable("rentals", {
   id: serial("id").primaryKey().notNull(),
   user_id: varchar("user_id")
     .notNull()
-    .references(() => users.id),
+    .references(() => users.id, { onDelete: "no action" }),
   movie_id: integer("movie_id")
-    .references(() => movies.id)
+    .references(() => movies.id, { onDelete: "no action" })
     .notNull(),
   edi_transaction_id: integer("edi_transaction_id")
-    .references(() => ediTransactions.id)
+    .references(() => ediTransactions.id, { onDelete: "no action" })
     .notNull(),
   status: rentalStatusEnum("rental_status").default("rented").notNull(),
   rental_date: timestamp("rental_date").defaultNow(),
@@ -291,10 +292,21 @@ export const favorites = pgTable("favorites", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   movie_id: integer("movie_id")
-    .references(() => movies.id)
+    .references(() => movies.id, { onDelete: "cascade" })
     .notNull(),
   added_on: timestamp("added_on").defaultNow(),
 });
+
+export const favoritesRelations = relations(favorites, ({ one }) => ({
+  user_id: one(users, {
+    fields: [favorites.user_id],
+    references: [users.id],
+  }),
+  movie_id: one(movies, {
+    fields: [favorites.movie_id],
+    references: [movies.id],
+  }),
+}));
 
 export type Favorites = InferSelectModel<typeof favorites>;
 export type FavoritesInsert = InferInsertModel<typeof favorites>;

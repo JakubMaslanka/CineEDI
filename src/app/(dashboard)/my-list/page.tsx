@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
+import { Movie } from "@/lib/db.schema";
 import { db } from "@/lib/db";
 import { MoviesGrid } from "@/components/home/movies-grid";
 
@@ -8,15 +9,17 @@ const MyListPage = async () => {
 
   if (!session) redirect("/auth/sign-in");
 
-  const movieIds = await db.query.favorites.findMany({
-    where: (schema, { eq }) => eq(schema.user_id, session.user.id),
-    orderBy: (schema) => schema.added_on,
-    columns: {
-      movie_id: true,
-    },
-  });
+  const movies = await db.query.favorites
+    .findMany({
+      where: (schema, { eq }) => eq(schema.user_id, session.user.id),
+      orderBy: (schema) => schema.added_on,
+      with: {
+        movie_id: true,
+      },
+    })
+    .then((data) => data.map(({ movie_id }) => movie_id) as Movie[]);
 
-  if (movieIds.length === 0) {
+  if (movies.length === 0) {
     return (
       <div className="flex flex-col min-h-screen mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <main className="flex-1">
@@ -41,14 +44,6 @@ const MyListPage = async () => {
       </div>
     );
   }
-
-  const movies = await db.query.movies.findMany({
-    where: (schema, { inArray }) =>
-      inArray(
-        schema.id,
-        (movieIds ?? []).map(({ movie_id }) => movie_id)
-      ),
-  });
 
   return (
     <div className="flex flex-col min-h-screen mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

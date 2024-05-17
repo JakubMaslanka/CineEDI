@@ -1,6 +1,7 @@
 "use server";
 
 import { add } from "date-fns/add";
+import { format } from "date-fns";
 import { revalidatePath } from "next/cache";
 import { auth } from "@/lib/auth";
 import { rateLimitByUserIP } from "@/lib/rateLimiter";
@@ -70,8 +71,20 @@ export const rentMovieAction = async (movieId: number) => {
     });
     if (!!user.emailVerified) {
       await sendMovieRentStartEmail(user.email, {
-        id: rent.id,
+        rentId: rent.id,
         movieTitle: movie.title,
+        directorName: movie.director!,
+        imageUrl: movie.image_url!,
+        rating: movie.imdb_rating!,
+        rentEndDate: `${format(
+          rent.rental_end_date,
+          "dd.MM.yyyy"
+        )}, godz. ${format(rent.rental_end_date!, "HH:mm")}`,
+        rentStartDate: `${format(
+          rent.rental_date!,
+          "dd.MM.yyyy"
+        )}, godz. ${format(rent.rental_date!, "HH:mm")}`,
+        userName: user.name!,
       });
     }
 

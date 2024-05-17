@@ -1,4 +1,3 @@
-import { unstable_noStore as noStore } from "next/cache";
 import dynamic from "next/dynamic";
 import { redirect } from "next/navigation";
 import { asc, desc } from "drizzle-orm";
@@ -6,8 +5,6 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { Movie, movies as moviesSchema } from "@/lib/db.schema";
 import { MoviesWithFilterLayout } from "@/components/home/movies-with-filter-layout";
-
-export const revalidate = 1800;
 
 interface SearchParams {
   sortBy?: "rating" | "year" | "title_asc" | "title_desc";

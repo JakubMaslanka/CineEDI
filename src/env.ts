@@ -7,6 +7,7 @@ export const env = createEnv({
     RESEND_API_KEY: z.string().min(1),
     AUTH_URL: z.string().url(),
     AUTH_SECRET: z.string().min(1),
+    CRONJOB_API_KEY: z.string().min(1),
   },
   client: {
     PUBLIC_NEXT_AUTH_SECRET: z.string().min(1),

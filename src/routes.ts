@@ -7,6 +7,7 @@ export const authRoutes = [
   "/auth/email-verification",
   "/auth/reset-password",
   "/auth/new-password",
+  "/api/cronjob/check-rentals",
 ];
 
 export const apiAuthPrefix = "/api/auth";

@@ -4,6 +4,7 @@ import { env } from "@/env";
 import ResetPasswordEmail from "../../emails/auth/reset-password-email";
 import VerifyEmail from "../../emails/auth/verify-email";
 import RentStartEmail from "../../emails/rental/rent-start-email";
+import RentEndEmail from "../../emails/rental/rent-end-email";
 
 const resend = new Resend(env.RESEND_API_KEY);
 
@@ -36,11 +37,6 @@ export const sendVerificationEmail = async (email: string, token: string) => {
     `[${new Date().toDateString()}] The verification email has been sent to: ${email}`
   );
 };
-
-interface RentDetails {
-  id: number;
-  movieTitle: string;
-}
 
 export const sendMovieRentStartEmail = async (
   addressEmail: string,
@@ -84,5 +80,34 @@ export const sendMovieRentStartEmail = async (
 
   console.info(
     `[${new Date().toDateString()}] The email for the movie rent process has been sent to: ${addressEmail}`
+  );
+};
+
+export const sendMovieRentEndEmail = async (
+  addressEmail: string,
+  content: {
+    rentId: number;
+    movieTitle: string;
+    userName: string;
+  }
+) => {
+  const homeLink = `${env.AUTH_URL}/home`;
+
+  await resend.emails.send({
+    to: addressEmail,
+    from: "no-reply@cineedi.online",
+    subject: `[CineEDI] Twoje wypożyczenie filmu "${content.movieTitle}" właśnie dobiego końca`,
+    react: (
+      <RentEndEmail
+        homeLink={homeLink}
+        movieTitle={content.movieTitle}
+        userName={content.userName}
+        rentId={content.rentId}
+      />
+    ),
+  });
+
+  console.info(
+    `[${new Date().toDateString()}] The email with the rent status ended has been sent to: ${addressEmail}`
   );
 };

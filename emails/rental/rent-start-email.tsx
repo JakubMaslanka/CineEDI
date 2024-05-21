@@ -150,7 +150,7 @@ export const RentStartEmail = ({
 );
 
 RentStartEmail.PreviewProps = {
-  rentStatusLink: "https://cineedi.com/rent-status/1",
+  rentStatusLink: "https://cineedi.online/rent-status/1",
   movieTitle: "Pulp Fiction",
   directorName: "Quentin Tarantino",
   rating: "8.6",

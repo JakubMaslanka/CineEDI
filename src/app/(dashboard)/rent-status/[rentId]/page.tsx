@@ -95,7 +95,12 @@ const RentStatusPage = async ({
                 rentId={rent.id}
                 ediData={rent.edi_transaction_id.edi_string}
               />
-              <Button variant="outline" className="bg-transparent" asChild>
+              <Button
+                disabled={rent.status === "ended"}
+                variant="outline"
+                className="bg-transparent"
+                asChild
+              >
                 <Link href={`/player/${rent.movie_id.id}`}>
                   <>
                     <PlayIcon

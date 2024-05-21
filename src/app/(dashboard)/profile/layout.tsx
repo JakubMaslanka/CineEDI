@@ -5,10 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const DEFAULT_SIDEBAR_LINKS = [
-  { id: 1, name: "Filmy", path: "/admin-panel/movies" },
-  { id: 2, name: "Kategorie filmów", path: "/admin-panel/movie-generes" },
-  { id: 3, name: "Transakcje", path: "/admin-panel/transactions" },
-  { id: 4, name: "Użytkownicy", path: "/admin-panel/users" },
+  { id: 1, name: "Profil", path: "/profile/settings" },
+  { id: 2, name: "Historia transakcji", path: "/profile/transaction-history" },
 ];
 
 const AdminPanelLayout = ({ children }: { children: React.ReactNode }) => {
@@ -16,9 +14,9 @@ const AdminPanelLayout = ({ children }: { children: React.ReactNode }) => {
   const isActive = (path: string) => path === pathname;
 
   return (
-    <>
+    <div className="h-[calc(100svh_-_181px)]">
       <div className="mx-auto grid w-full max-w-6xl gap-2 pb-8">
-        <h1 className="text-3xl font-semibold">Panel Administratora</h1>
+        <h1 className="text-3xl font-semibold">Twój profil</h1>
         <div className="border-b border-neutral-500 mt-2"></div>
       </div>
       <div className="mx-auto grid w-full max-w-6xl items-start gap-6 md:grid-cols-[180px_1fr] lg:grid-cols-[250px_1fr]">
@@ -40,7 +38,7 @@ const AdminPanelLayout = ({ children }: { children: React.ReactNode }) => {
         </nav>
         <div className="grid gap-6">{children}</div>
       </div>
-    </>
+    </div>
   );
 };
 

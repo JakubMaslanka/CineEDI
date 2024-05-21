@@ -7,13 +7,13 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
-  BellIcon,
   HamburgerMenuIcon,
   Cross1Icon,
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 import { cn } from "@/utils/cn";
 import { CommandDialog, CommandInput, CommandList } from "./command";
+import { NotificationButton } from "./notification-button";
 
 const DEFAULT_NAVBAR_LINKS = [
   { id: 1, name: "Home", path: "/home" },
@@ -116,25 +116,19 @@ export const Navbar = ({
                 <button
                   type="button"
                   onClick={() => setSearchCommandOpen(true)}
-                  className="relative rounded-full bg-zinc-950 p-1 text-gray-200 hover:text-cineedi/80 focus:outline-none focus:ring-2 focus:ring-cineedi focus:ring-offset-2"
+                  className="relative rounded-full bg-zinc-950 p-1 text-gray-200 hover:text-cineedi/80 focus:outline-none focus:ring-2 focus:ring-cineedi/50"
                 >
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Szukaj filmu</span>
                   <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
-                <button
-                  type="button"
-                  className="relative rounded-full bg-zinc-950 p-1 text-gray-200 hover:text-cineedi/80 focus:outline-none focus:ring-2 focus:ring-cineedi focus:ring-offset-2"
-                >
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Otworz powiadomienia</span>
-                  <BellIcon className="h-6 w-6" aria-hidden="true" />
-                </button>
+
+                <NotificationButton />
 
                 {/* Profile dropdown */}
-                <Menu as="div" className="relative ml-3">
+                <Menu as="div" className="relative ml-1">
                   <div>
-                    <Menu.Button className="relative flex rounded-full bg-zinc-950 text-sm focus:outline-none focus:ring-2 focus:ring-cineedi focus:ring-offset-2">
+                    <Menu.Button className="relative flex rounded-full bg-zinc-950 text-sm hover:text-cineedi/80 focus:outline-none focus:ring-2 focus:ring-cineedi/50">
                       <span className="absolute -inset-1.5" />
                       <span className="sr-only">Open user menu</span>
                       <Image

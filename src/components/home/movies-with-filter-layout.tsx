@@ -249,7 +249,7 @@ export const MoviesWithFilterLayout = ({
 
       <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex items-baseline justify-between border-b border-neutral-400 pb-6 pt-4">
-          <h1 className="text-4xl font-bold tracking-tight text-neutral-200">
+          <h1 className="text-xl lg:text-4xl font-bold tracking-tight text-neutral-200">
             Zasoby wypożyczalni:
           </h1>
 
@@ -257,7 +257,7 @@ export const MoviesWithFilterLayout = ({
             <Menu as="div" className="relative inline-block text-left">
               <div>
                 <Menu.Button className="group inline-flex justify-center text-sm font-medium text-neutral-200 hover:text-neutral-400">
-                  Sortowanie po
+                  Sortowanie
                   <ChevronDownIcon
                     className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-neutral-400 group-hover:text-neutral-600"
                     aria-hidden="true"

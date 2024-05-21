@@ -106,6 +106,7 @@ export const rentMovieAction = async (movieId: number) => {
     );
 
     revalidatePath(`/movie/${movieId}`);
+    revalidatePath("/home");
 
     return {
       success: {

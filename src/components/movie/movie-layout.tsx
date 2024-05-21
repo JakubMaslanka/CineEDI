@@ -78,6 +78,7 @@ export const MovieLayout = ({
         }
         if (result.success) {
           toast.success(result.success.message);
+          router.refresh();
           router.push(`/rent-status/${result.success.rentId}`);
         }
       })

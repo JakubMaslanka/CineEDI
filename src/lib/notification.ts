@@ -1,3 +1,4 @@
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { db } from "./db";
 import { notifications as notificationsSchema } from "./db.schema";
@@ -32,7 +33,7 @@ export const sendInAppNotification = async (
       `[${new Date().toDateString()}] Notification for user with id ${recipientUserId} sent successfully!`
     );
 
-    // TODO: handle revalidate cache tags for /notifications/[user] api calls
+    revalidateTag("notifications");
     return { success: "Pomyślnie wysłano powiadomienie" };
   } catch (error) {
     return { error: "Wystąpił błąd podczas wysyłania powiadomienia" };

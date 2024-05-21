@@ -8,7 +8,6 @@ import {
   pgTable,
   serial,
   varchar,
-  jsonb,
   timestamp,
   integer,
   pgEnum,

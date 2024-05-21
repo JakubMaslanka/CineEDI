@@ -46,6 +46,7 @@ export const sendMovieRentStartEmail = async (
   addressEmail: string,
   content: {
     rentId: number;
+    ediString: string;
     movieTitle: string;
     userName: string;
     directorName: string;
@@ -73,6 +74,12 @@ export const sendMovieRentStartEmail = async (
         imageUrl={content.imageUrl}
       />
     ),
+    attachments: [
+      {
+        filename: `transaction_${content.rentId}.edi`,
+        content: Buffer.from(content.ediString, "utf-8").toString("base64"),
+      },
+    ],
   });
 
   console.info(

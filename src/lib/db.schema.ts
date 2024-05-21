@@ -37,6 +37,7 @@ export const users = pgTable(
     image: varchar("image"),
     role: userRoleEnum("role").default("user").notNull(),
     firstTimeLoggedIn: boolean("first_time_logged_in").default(true),
+    created_at: timestamp("created_at").defaultNow(),
   },
   (table) => ({
     idIdx: index("id_idx").on(table.id),
@@ -314,8 +315,7 @@ export type FavoritesInsert = InferInsertModel<typeof favorites>;
 // EDI Transactions Table
 export const ediTransactions = pgTable("edi_transactions", {
   id: serial("id").primaryKey().notNull(),
-  content: jsonb("content").notNull(),
-  content_xml: varchar("content_xml"),
+  edi_string: varchar("edi_string").notNull(),
   created_at: timestamp("created_at").defaultNow(),
 });
 

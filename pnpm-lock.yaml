@@ -86,6 +86,9 @@ dependencies:
   postgres:
     specifier: 3.4.3
     version: 3.4.3
+  rdpcrystal-edi-library:
+    specifier: 1.4.1
+    version: 1.4.1
   react:
     specifier: 18.2.0
     version: 18.2.0
@@ -10079,6 +10082,10 @@ packages:
       iconv-lite: 0.4.24
       unpipe: 1.0.0
     dev: true
+
+  /rdpcrystal-edi-library@1.4.1:
+    resolution: {integrity: sha512-jZsBSQFy15IR0mK+HdFb3mS7QFBeeZuOat2idV/G7knHO1OZFUKSgdb0WfGtr/6ndCEGncSv/ZnjRucTC4tFvA==}
+    dev: false
 
   /react-dom@18.2.0(react@18.2.0):
     resolution: {integrity: sha512-6IMTriUmvsjHUjNtEDudZfuDQUoWXVxKHhlEGSk81n4YFS+r/Kl99wXiwlVXtPBtJenozv2P+hxDsw9eA7Xo6g==}

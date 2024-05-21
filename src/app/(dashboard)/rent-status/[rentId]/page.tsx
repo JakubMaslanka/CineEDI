@@ -91,7 +91,10 @@ const RentStatusPage = async ({
           <div className="flex flex-col space-y-2 font-sans">
             <p className="text-sm text-neutral-400">Operacje:</p>
             <div className="flex flex-col space-y-6">
-              <DownloadEdiButton />
+              <DownloadEdiButton
+                rentId={rent.id}
+                ediData={rent.edi_transaction_id.edi_string}
+              />
               <Button variant="outline" className="bg-transparent" asChild>
                 <Link href={`/player/${rent.movie_id.id}`}>
                   <>

@@ -2,10 +2,33 @@
 
 import { DownloadIcon } from "@radix-ui/react-icons";
 import { Button } from "../ui/button";
+import { toast } from "sonner";
 
-export const DownloadEdiButton = () => {
+interface DownloadEdiButtonProps {
+  rentId: number;
+  ediData: string;
+}
+
+export const DownloadEdiButton = ({
+  rentId,
+  ediData,
+}: DownloadEdiButtonProps) => {
   const handleDownloadEdiFile = () => {
-    console.log("Downloading EDI file...");
+    if (!ediData) {
+      toast.error(
+        "Ops! Coś poszło nie tak podczas pobierania dokumentu transakcji."
+      );
+      return;
+    }
+
+    const blob = new Blob([ediData], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `transaction_${rentId}.edi`;
+    a.click();
+    URL.revokeObjectURL(url);
+    a.remove();
   };
 
   return (

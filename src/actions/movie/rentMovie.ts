@@ -7,6 +7,7 @@ import { auth } from "@/lib/auth";
 import { rateLimitByUserIP } from "@/lib/rateLimiter";
 import { sendMovieRentStartEmail } from "@/lib/mail";
 import { sendInAppNotification } from "@/lib/notification";
+import { generateEDIfile } from "@/lib/edi";
 import { getUserById } from "@/utils/db";
 import { db } from "@/lib/db";
 import {
@@ -37,11 +38,20 @@ export const rentMovieAction = async (movieId: number) => {
     const user = await getUserById(session.user.id);
     if (!user) return { error: "Nie jesteś zalogowany!" };
 
-    // TODO: Create EDI file
+    const ediString = generateEDIfile({
+      userName: user.name!,
+      userEmail: user.email,
+      movieTitle: movie.title,
+      movieDirector: movie.director!.toString(),
+      movieRate: movie.imdb_rating!.toString(),
+      rentalStartDate: new Date().toLocaleString(),
+      rentalEndDate: add(new Date(), { days: 1 }).toLocaleString(),
+    });
+
     const ediTransaction = await db
       .insert(ediTransactionsSchema)
       .values({
-        content: JSON.stringify({}),
+        edi_string: ediString,
       })
       .returning();
     if (!ediTransaction[0])
@@ -72,6 +82,7 @@ export const rentMovieAction = async (movieId: number) => {
     if (!!user.emailVerified) {
       await sendMovieRentStartEmail(user.email, {
         rentId: rent.id,
+        ediString: ediString,
         movieTitle: movie.title,
         directorName: movie.director!,
         imageUrl: movie.image_url!,

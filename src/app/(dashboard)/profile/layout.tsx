@@ -1,8 +1,8 @@
 "use client";
 
-import { cn } from "@/utils/cn";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { cn } from "@/utils/cn";
 
 const DEFAULT_SIDEBAR_LINKS = [
   { id: 1, name: "Profil", path: "/profile/settings" },

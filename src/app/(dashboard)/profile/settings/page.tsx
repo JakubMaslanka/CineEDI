@@ -1,7 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { UserCircleIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
 const Page = async () => {

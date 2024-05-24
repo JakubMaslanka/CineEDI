@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
+import { WheelEventHandler, useEffect, useTransition } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -89,7 +89,7 @@ export const InsertMovieForm = ({
           <FormField
             control={form.control}
             name="genres"
-            render={({ field: { onChange, ...restProps } }) => (
+            render={({ field: { onChange, value, ...restProps } }) => (
               <FormItem>
                 <FormLabel>
                   Gatunki<sup className="text-destructive/65">*</sup>
@@ -106,6 +106,7 @@ export const InsertMovieForm = ({
                       ...restProps,
                       placeholder: "Wybierz gatunki...",
                     }}
+                    selectedIds={value}
                     onSelectedChanged={(newValue: number[]) =>
                       onChange(newValue)
                     }
@@ -163,6 +164,7 @@ export const InsertMovieForm = ({
                   <Input
                     {...field}
                     disabled={isPending}
+                    onWheelCapture={(e) => e.currentTarget.blur()}
                     type="number"
                     placeholder="2004"
                   />
@@ -183,6 +185,7 @@ export const InsertMovieForm = ({
                   <Input
                     {...field}
                     disabled={isPending}
+                    onWheelCapture={(e) => e.currentTarget.blur()}
                     type="number"
                     placeholder="7.3"
                   />
@@ -265,11 +268,6 @@ export const UpdateMovieForm = ({
         form.getValues("genres")
       );
 
-      console.log(
-        isGenresEqual,
-        existingMovie!.genres,
-        form.getValues("genres")
-      );
       updateMovie(existingMovie!.id, data, isGenresEqual)
         .then((result) => {
           toast.success(
@@ -414,6 +412,7 @@ export const UpdateMovieForm = ({
                   <Input
                     {...field}
                     disabled={isPending}
+                    onWheelCapture={(e) => e.currentTarget.blur()}
                     type="number"
                     placeholder="2004"
                   />
@@ -434,6 +433,7 @@ export const UpdateMovieForm = ({
                   <Input
                     {...field}
                     disabled={isPending}
+                    onWheelCapture={(e) => e.currentTarget.blur()}
                     type="number"
                     placeholder="7.3"
                   />

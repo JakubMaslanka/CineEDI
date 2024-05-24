@@ -35,11 +35,11 @@ export const MoviesGrid = ({
 
 const MovieCard = ({ movie }: { movie: Movie }) => (
   <Link className="relative" href={`/movie/${movie.id}`}>
-    <div className="relative h-72 w-full overflow-hidden rounded-lg cursor-pointer">
+    <div className="relative h-80 w-full overflow-hidden rounded-lg cursor-pointer">
       <img
         src={movie.image_url ?? ""}
         alt={`${movie.title} poster`}
-        className="h-full w-full object-cover object-top hover:scale-105 transition-transform duration-200 ease-in-out"
+        className="h-full w-full object-fill hover:scale-105 transition-transform duration-200 ease-in-out"
       />
     </div>
     <div className="relative mt-4">
@@ -59,7 +59,7 @@ const MovieCard = ({ movie }: { movie: Movie }) => (
         </p>
       </div>
     </div>
-    <div className="absolute inset-x-0 top-0 flex h-72 items-end justify-end overflow-hidden pointer-events-none rounded-lg p-4">
+    <div className="absolute inset-x-0 top-0 flex h-80 items-end justify-end overflow-hidden pointer-events-none rounded-lg p-4">
       <div
         aria-hidden="true"
         className="absolute inset-x-0 bottom-0 h-36 bg-gradient-to-t from-black opacity-50"

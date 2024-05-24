@@ -12,7 +12,7 @@ const RecentlyAddedMoviesPage = async () => {
   const movies = await db.query.movies.findMany({
     where: (schema, { gte }) =>
       gte(schema.create_at, sub(new Date(), { weeks: 2 })),
-    orderBy: (schema) => schema.create_at,
+    orderBy: (schema, { desc }) => desc(schema.create_at),
   });
 
   if (movies.length === 0) {

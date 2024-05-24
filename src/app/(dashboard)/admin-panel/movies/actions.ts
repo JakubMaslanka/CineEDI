@@ -11,6 +11,7 @@ import {
   movieGenres,
   moviesToGenres,
 } from "@/lib/db.schema";
+import { notifyUsersAboutNewMovie } from "@/actions/notifications";
 
 import { movieValidationSchema } from "./validation";
 
@@ -84,6 +85,7 @@ export const insertMovie = async (
       }))
     );
 
+    await notifyUsersAboutNewMovie(newMovie[0].title, genres);
     revalidatePath("/admin-panel/movies");
     return newMovie[0];
   } catch (error) {

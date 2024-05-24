@@ -110,7 +110,7 @@ export const NotificationButton = () => {
                   {notification.status === "received" ? (
                     <button
                       disabled
-                      className="bg-cineedi/60 opacity-85 text-neutral-100 h-8 w-12 rounded-md shadow-xl"
+                      className="bg-cineedi/60 opacity-85 text-neutral-100 h-8 w-8 flex-shrink-0 rounded-md shadow-xl"
                     >
                       <Eye className="flex-shrink-0 h-4 w-4 mx-auto" />
                     </button>
@@ -127,7 +127,7 @@ export const NotificationButton = () => {
                             setSelectedNotification(notification.id);
                             markNotificationAsSeen(notification.id);
                           }}
-                          className="bg-cineedi text-neutral-100 h-8 w-12 rounded-md shadow-xl hover:bg-cineedi/80 transition-colors duration-200 ease-in-out"
+                          className="bg-cineedi text-neutral-100 h-8 w-8 flex-shrink-0 rounded-md shadow-xl hover:bg-cineedi/80 transition-colors duration-200 ease-in-out"
                         >
                           {selectedNotification === notification.id &&
                           isMarkNotificationAsSeenActionPending ? (

@@ -186,7 +186,7 @@ export const MovieLayout = ({
           <img
             src={movie.image_url!}
             alt={`${movie.title} poster`}
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-fill object-center"
           />
         </div>
       </div>

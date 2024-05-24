@@ -1,1 +1,2 @@
-export * from "./markNotificationAsSeen";
+export { markNotificationAsSeenAction } from "./markNotificationAsSeen";
+export { notifyUsersAboutNewMovie } from "./notifyUsersAboutNewMovie";

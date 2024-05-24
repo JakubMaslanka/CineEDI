@@ -196,46 +196,6 @@ export const moviesToGenresRelations = relations(moviesToGenres, ({ one }) => ({
   }),
 }));
 
-// Movie Cast Table
-export const cast = pgTable("cast", {
-  id: serial("id").primaryKey(),
-  actor_name: varchar("actor_name").notNull(),
-  role: varchar("role").notNull(),
-});
-
-export type Cast = InferSelectModel<typeof cast>;
-export type CastInsert = InferInsertModel<typeof cast>;
-
-export const castRelations = relations(cast, ({ many }) => ({
-  castToMovies: many(castToMovies),
-}));
-
-export const castToMovies = pgTable(
-  "cast_to_movies",
-  {
-    castId: integer("cast_id")
-      .notNull()
-      .references(() => cast.id, { onDelete: "cascade" }),
-    movieId: integer("movie_id")
-      .notNull()
-      .references(() => movies.id, { onDelete: "cascade" }),
-  },
-  (t) => ({
-    pk: primaryKey({ columns: [t.castId, t.movieId] }),
-  })
-);
-
-export const castToMoviesRelations = relations(castToMovies, ({ one }) => ({
-  cast: one(cast, {
-    fields: [castToMovies.castId],
-    references: [cast.id],
-  }),
-  movie: one(movies, {
-    fields: [castToMovies.movieId],
-    references: [movies.id],
-  }),
-}));
-
 // Rentals Table
 export const rentals = pgTable("rentals", {
   id: serial("id").primaryKey().notNull(),

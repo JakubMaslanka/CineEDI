@@ -1,14 +1,18 @@
 import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 const Page = async () => {
   const session = await auth();
 
-  return (
-    <div className="flex flex-col flex-wrap">
-      <h1>Todo:</h1>
-      {JSON.stringify(session)}
-    </div>
-  );
+  if (!session?.user) {
+    redirect("/auth/sign-in");
+  }
+
+  if (session?.user.role !== "admin") {
+    redirect("/home");
+  }
+
+  redirect("/admin-panel/movies");
 };
 
 export default Page;

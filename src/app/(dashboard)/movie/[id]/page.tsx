@@ -20,17 +20,20 @@ const MoviePage = async ({ params: { id } }: { params: { id: string } }) => {
       and(eq(schema.movie_id, +id), eq(schema.user_id, session.user.id)),
   });
 
-  const isRented = await db.query.rentals.findFirst({
-    where: (schema, { and, eq }) =>
-      and(eq(schema.movie_id, +id), eq(schema.user_id, session.user.id)),
-  });
+  const isRented = await db.query.rentals
+    .findMany({
+      where: (schema, { and, eq }) =>
+        and(eq(schema.movie_id, +id), eq(schema.user_id, session.user.id)),
+      orderBy: (schema, { desc }) => desc(schema.rental_date),
+    })
+    .then((data) => data?.[0] ?? false);
 
   return (
     <MovieLayout
       movie={movie[0].movie}
       genres={movie.map(({ movieGenre }) => movieGenre.genre)}
       isFavourite={!!isFavourite}
-      isRented={!!isRented}
+      isRented={!!isRented && isRented.status === "rented"}
     />
   );
 };

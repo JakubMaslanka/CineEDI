@@ -29,6 +29,13 @@
       "when": 1716286364622,
       "tag": "0003_clever_shotgun",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1716490895130,
+      "tag": "0004_cloudy_firelord",
+      "breakpoints": true
     }
   ]
 }

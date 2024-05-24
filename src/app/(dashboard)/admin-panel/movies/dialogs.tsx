@@ -10,11 +10,11 @@ import {
 } from "react";
 import { Cross2Icon } from "@radix-ui/react-icons";
 import { toast } from "sonner";
-import { MovieGenres } from "@/lib/db.schema";
+import { Movie, MovieGenres } from "@/lib/db.schema";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
-import { getGenere } from "./actions";
-import { DeleteGenereForm, InsertGenereForm, UpdateGenereForm } from "./forms";
+import { getAllGeneres, getMovie } from "./actions";
+import { InsertMovieForm, UpdateMovieForm, DeleteMovieForm } from "./forms";
 
 interface DialogOptions {
   mode: "insert" | "update" | "delete";
@@ -32,6 +32,7 @@ const DialogContext = createContext<DialogContextType | undefined>(undefined);
 export const DialogProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const [movieGeneres, setMovieGeneres] = useState<MovieGenres[]>();
   const [dialogOptions, setDialogOptions] = useState<
     DialogOptions | undefined
   >();
@@ -44,9 +45,21 @@ export const DialogProvider: React.FC<{ children: ReactNode }> = ({
     setDialogOptions(undefined);
   };
 
+  const getMovieGeneres = useCallback(async () => {
+    getAllGeneres()
+      .then((movieGeneres) => setMovieGeneres(movieGeneres))
+      .catch(() =>
+        toast.error("Coś poszło nie tak przy próbie pobrania gatunków!")
+      );
+  }, []);
+
+  useEffect(() => {
+    getMovieGeneres();
+  }, [getMovieGeneres]);
+
   return (
     <DialogContext.Provider value={{ dialogOptions, openDialog, closeDialog }}>
-      <DialogComponent />
+      <DialogComponent movieGeneres={movieGeneres} />
       {children}
     </DialogContext.Provider>
   );
@@ -62,12 +75,16 @@ export const useDialog = () => {
   return context;
 };
 
-const DialogComponent = () => {
+const DialogComponent = ({
+  movieGeneres,
+}: {
+  movieGeneres: MovieGenres[] | undefined;
+}) => {
   const { dialogOptions, closeDialog } = useDialog();
-  const [record, setRecord] = useState<MovieGenres>();
+  const [record, setRecord] = useState<Movie & { genres: number[] }>();
 
   const getRecord = useCallback(async (id: number) => {
-    getGenere(id)
+    getMovie(id)
       .then((record) => setRecord(record))
       .catch(() =>
         toast.error("Coś poszło nie tak przy próbie pobrania recordu!")
@@ -82,9 +99,9 @@ const DialogComponent = () => {
 
   const getDialogTitleByMode = (mode: DialogOptions["mode"]) => {
     const titles: Record<DialogOptions["mode"], string> = {
-      insert: "Dodaj nowy gatunek",
-      update: "Zaktualizuj istniejący gatunek",
-      delete: "Usuń istniejący gatunek",
+      insert: "Dodaj nowy film",
+      update: "Zaktualizuj istniejący film",
+      delete: "Usuń istniejący film",
     };
 
     return titles[mode];
@@ -92,13 +109,17 @@ const DialogComponent = () => {
 
   const getDialogContentByMode = (mode: DialogOptions["mode"]) => {
     const content: Record<DialogOptions["mode"], ReactNode> = {
-      insert: <InsertGenereForm />,
+      insert: (
+        <InsertMovieForm movieGeneres={movieGeneres} onClose={closeDialog} />
+      ),
       update: (
-        <UpdateGenereForm existingGenere={record} onClose={closeDialog} />
+        <UpdateMovieForm
+          movieGeneres={movieGeneres}
+          existingMovie={record}
+          onClose={closeDialog}
+        />
       ),
-      delete: (
-        <DeleteGenereForm existingGenere={record} onClose={closeDialog} />
-      ),
+      delete: <DeleteMovieForm existingMovie={record} onClose={closeDialog} />,
     };
 
     return content[mode];

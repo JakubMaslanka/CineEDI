@@ -16,7 +16,7 @@ const RentStatusPage = async ({
   const session = await auth();
   if (!session) redirect("/auth/sign-in");
 
-  const rent = await db.query.rentals.findFirst({
+  let query = db.query.rentals.findFirst({
     where: (schema, { and, eq }) =>
       and(eq(schema.id, +rentId), eq(schema.user_id, session.user.id)),
     with: {
@@ -25,6 +25,19 @@ const RentStatusPage = async ({
       edi_transaction_id: true,
     },
   });
+
+  if (session.user.role === "admin") {
+    query = db.query.rentals.findFirst({
+      where: (schema, { and, eq }) => and(eq(schema.id, +rentId)),
+      with: {
+        user_id: true,
+        movie_id: true,
+        edi_transaction_id: true,
+      },
+    });
+  }
+
+  const rent = await query.execute();
 
   if (!rent) notFound();
 
@@ -95,22 +108,19 @@ const RentStatusPage = async ({
                 rentId={rent.id}
                 ediData={rent.edi_transaction_id.edi_string}
               />
-              <Button
-                disabled={rent.status === "ended"}
-                variant="outline"
-                className="bg-transparent"
-                asChild
-              >
-                <Link href={`/player/${rent.movie_id.id}`}>
-                  <>
-                    <PlayIcon
-                      className="mr-2 h-4 w-4 flex-shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span>Odtwórz film</span>
-                  </>
-                </Link>
-              </Button>
+              {rent.status !== "ended" && (
+                <Button variant="outline" className="bg-transparent" asChild>
+                  <Link href={`/player/${rent.movie_id.id}`}>
+                    <>
+                      <PlayIcon
+                        className="mr-2 h-4 w-4 flex-shrink-0"
+                        aria-hidden="true"
+                      />
+                      <span>Odtwórz film</span>
+                    </>
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
         </div>

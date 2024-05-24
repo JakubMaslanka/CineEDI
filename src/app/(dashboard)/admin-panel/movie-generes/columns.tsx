@@ -50,13 +50,13 @@ export const columns: ColumnDef<MovieGenres>[] = [
             <DropdownMenuItem
               onClick={() => openDialog({ mode: "update", id: genre.id })}
             >
-              Edytuj wpis
+              Edytuj gatunek
             </DropdownMenuItem>
             <DropdownMenuItem
               className="text-destructive"
               onClick={() => openDialog({ mode: "delete", id: genre.id })}
             >
-              Usuń wpis
+              Usuń gatunek
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -12,5 +12,11 @@ export async function GET() {
     name: require("../../../../package.json").name,
     version: require("../../../../package.json").version,
     nextVersion: require("../../../../package.json").dependencies.next,
+    nodeEnv: process.env.NODE_ENV,
+    lastCommit:
+      require("child_process")
+        .execSync("git rev-parse HEAD")
+        .toString()
+        .trim() ?? null,
   });
 }

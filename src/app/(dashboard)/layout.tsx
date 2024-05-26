@@ -4,7 +4,6 @@ import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "@/components/ui/sonner";
 import { Navbar } from "@/components/ui/navbar";
 import { Footer } from "@/components/ui/footer";
-import { signOutAction } from "@/actions/auth";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -20,7 +19,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         shadow="0 0 10px #B4151D95,0 0 5px #B4151D50"
       />
       <Suspense>
-        <Navbar onSignOutAction={signOutAction} />
+        <Navbar />
       </Suspense>
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 mt-8 text-white">
         {children}

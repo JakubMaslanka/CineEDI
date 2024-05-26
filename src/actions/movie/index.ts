@@ -1,4 +1,4 @@
-export * from "./addToFavourite";
-export * from "./removeFromFavourite";
-export * from "./saveGenrePreferences";
-export * from "./rentMovie";
+export { addToFavouriteAction } from "./addToFavourite";
+export { removeFromFavouriteAction } from "./removeFromFavourite";
+export { saveGenrePreferencesAction } from "./saveGenrePreferences";
+export { rentMovieAction } from "./rentMovie";

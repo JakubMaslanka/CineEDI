@@ -213,10 +213,17 @@ export const MovieLayout = ({
                 </>
               ) : (
                 <>
-                  <RocketIcon
-                    className="mr-2 h-5 w-5 flex-shrink-0 "
-                    aria-hidden="true"
-                  />
+                  {isRentMovieActionPending ? (
+                    <LoaderCircleIcon
+                      className="mr-2 h-6 w-6 flex-shrink-0 animate-spin"
+                      aria-hidden="true"
+                    />
+                  ) : (
+                    <RocketIcon
+                      className="mr-2 h-5 w-5 flex-shrink-0"
+                      aria-hidden="true"
+                    />
+                  )}
                   <span>Wypożycz</span>
                 </>
               )}

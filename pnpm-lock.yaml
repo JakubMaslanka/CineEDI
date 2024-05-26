@@ -86,6 +86,9 @@ dependencies:
   next-themes:
     specifier: 0.3.0
     version: 0.3.0(react-dom@18.2.0)(react@18.2.0)
+  nextjs-toploader:
+    specifier: 1.6.12
+    version: 1.6.12(next@14.2.2)(react-dom@18.2.0)(react@18.2.0)
   postgres:
     specifier: 3.4.3
     version: 3.4.3
@@ -127,9 +130,6 @@ devDependencies:
   '@types/node':
     specifier: 20.12.7
     version: 20.12.7
-  '@types/nodemailer':
-    specifier: 6.4.14
-    version: 6.4.14
   '@types/react':
     specifier: 18.2.79
     version: 18.2.79
@@ -5347,12 +5347,6 @@ packages:
     dependencies:
       undici-types: 5.26.5
 
-  /@types/nodemailer@6.4.14:
-    resolution: {integrity: sha512-fUWthHO9k9DSdPCSPRqcu6TWhYyxTBg382vlNIttSe9M7XfsT06y0f24KHXtbnijPGGRIcVvdKHTNikOI6qiHA==}
-    dependencies:
-      '@types/node': 20.12.7
-    dev: true
-
   /@types/normalize-package-data@2.4.4:
     resolution: {integrity: sha512-37i+OaWTh9qeK4LSHPsyRC7NahnGotNuZvjLSgcPzblpHB3rrCJxAOgI5gCdKm7coonsaX1Of0ILiTcnZjbfxA==}
     dev: false
@@ -9625,6 +9619,20 @@ packages:
       - babel-plugin-macros
     dev: false
 
+  /nextjs-toploader@1.6.12(next@14.2.2)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-nbun5lvVjlKnxLQlahzZ55nELVEduqoEXT03KCHnsEYJnFpI/3BaIzpMyq/v8C7UGU2NfxQmjq6ldZ310rsDqA==}
+    peerDependencies:
+      next: '>= 6.0.0'
+      react: '>= 16.0.0'
+      react-dom: '>= 16.0.0'
+    dependencies:
+      next: 14.2.2(@babel/core@7.24.4)(react-dom@18.2.0)(react@18.2.0)
+      nprogress: 0.2.0
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0(react@18.2.0)
+    dev: false
+
   /node-releases@2.0.14:
     resolution: {integrity: sha512-y10wOWt8yZpqXmOgRo77WaHEmhYQYGNA6y421PKsKYWEK8aW+cqAphborZDhqfyKrbZEN92CN1X2KbafY2s7Yw==}
 
@@ -9652,6 +9660,10 @@ packages:
   /normalize-range@0.1.2:
     resolution: {integrity: sha512-bdok/XvKII3nUpklnV6P2hxtMNrCboOjAcyBuQnWEhO665FwrSNRxU+AqpsyvO6LgGYPspN+lu5CLtw4jPRKNA==}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /nprogress@0.2.0:
+    resolution: {integrity: sha512-I19aIingLgR1fmhftnbWWO3dXc0hSxqHQHQb3H8m+K3TnEn/iSeTZZOyvKXWqQESMwuUVnatlCnZdLBZZt2VSA==}
     dev: false
 
   /number-allocator@1.0.14:
@@ -10214,7 +10226,6 @@ packages:
       loose-envify: 1.4.0
       object-assign: 4.1.1
       react-is: 16.13.1
-    dev: true
 
   /proto-list@1.2.4:
     resolution: {integrity: sha512-vtK/94akxsTMhe0/cbfpR+syPuszcuwhqVjJq26CuNDgFGj682oRBXOP5MJpv2r7JtE8MsiepGIqvvOTBwn2vA==}
@@ -10394,7 +10405,6 @@ packages:
 
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
-    dev: true
 
   /react-reconciler@0.29.0(react@18.2.0):
     resolution: {integrity: sha512-wa0fGj7Zht1EYMRhKWwoo1H9GApxYLBuhoAuXN0TlltESAjDssB+Apf0T/DngVqaMyPypDmabL37vw/2aRM98Q==}

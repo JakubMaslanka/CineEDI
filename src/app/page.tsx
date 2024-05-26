@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { Inter, Poppins } from "next/font/google";
 import { cn } from "@/utils/cn";
@@ -52,7 +53,9 @@ export default async function Home() {
           </p>
           <div className="w-full relative z-10 mt-12 flex items-center justify-center">
             <Link href="/auth/sign-in">
-              <HeroButton>Rozpocznij!</HeroButton>
+              <Suspense>
+                <HeroButton>Rozpocznij!</HeroButton>
+              </Suspense>
             </Link>
           </div>
         </div>

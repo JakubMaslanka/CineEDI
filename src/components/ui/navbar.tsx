@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { signOut } from "next-auth/react";
 import { Fragment, useCallback, useEffect, useState } from "react";
-import { signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   HamburgerMenuIcon,
@@ -173,15 +174,15 @@ export const Navbar = () => {
                         </Link>
                       </Menu.Item>
                       <Menu.Item>
-                        {/* <form action={onSignOutAction}> */}
                         <button
                           type="submit"
                           className="block px-4 py-2 text-sm w-full text-left text-gray-700 hover:text-gray-500 hover:translate-x-1 transition-all duration-200 ease-in-out"
-                          onClick={() => signOut()}
+                          onClick={() =>
+                            signOut({ redirect: true, callbackUrl: "/" })
+                          }
                         >
                           Wyloguj się
                         </button>
-                        {/* </form> */}
                       </Menu.Item>
                     </Menu.Items>
                   </Transition>

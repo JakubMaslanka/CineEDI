@@ -1,4 +1,4 @@
-import dynamic from "next/dynamic";
+import dynamicImport from "next/dynamic";
 import { redirect } from "next/navigation";
 import { asc, desc } from "drizzle-orm";
 import { auth } from "@/lib/auth";
@@ -14,9 +14,14 @@ interface SearchParams {
   ratingFiltering?: string;
 }
 
-const WelcomeModal = dynamic(() => import("@/components/home/welcome-modal"), {
-  ssr: false,
-});
+const WelcomeModal = dynamicImport(
+  () => import("@/components/home/welcome-modal"),
+  {
+    ssr: false,
+  }
+);
+
+export const dynamic = "force-dynamic";
 
 async function fetchMoviesBySearchParams(
   searchParams: SearchParams
